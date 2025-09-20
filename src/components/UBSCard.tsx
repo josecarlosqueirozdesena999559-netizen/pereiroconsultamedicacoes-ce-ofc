@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { MapPin, Clock, User, Download, Calendar, Phone, Users, Building } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -11,6 +12,18 @@ interface UBSCardProps {
 }
 
 const UBSCard = ({ ubs }: UBSCardProps) => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 640);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   const handleDownload = () => {
     if (ubs.pdfUrl) {
       const link = document.createElement('a');
@@ -29,70 +42,70 @@ const UBSCard = ({ ubs }: UBSCardProps) => {
   };
 
   return (
-    <Card className="hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border-2 hover:border-primary/40 bg-gradient-to-br from-card to-card/95 backdrop-blur-sm">
+    <Card className="hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-2 hover:border-primary/40 bg-gradient-to-br from-card to-card/95 backdrop-blur-sm w-full">
       <CardHeader className="pb-4 bg-gradient-to-r from-primary/8 to-primary/12 rounded-t-lg">
-        <div className="flex items-start justify-between">
-          <div className="flex items-center space-x-3">
+        <div className="flex flex-col sm:flex-row items-start justify-between gap-3">
+          <div className="flex items-center space-x-3 flex-1">
             <div className="p-3 bg-gradient-to-br from-primary/15 to-primary/20 rounded-xl shadow-sm">
               <Building className="h-5 w-5 text-primary" />
             </div>
-            <div>
-              <CardTitle className="text-lg font-bold text-primary">
+            <div className="min-w-0 flex-1">
+              <CardTitle className="text-base sm:text-lg font-bold text-primary truncate">
                 {ubs.nome}
               </CardTitle>
-              <p className="text-sm text-muted-foreground font-medium">
+              <p className="text-xs sm:text-sm text-muted-foreground font-medium">
                 Unidade Básica de Saúde
               </p>
             </div>
           </div>
           <Badge 
             variant={getStatusColor(ubs.status) as any}
-            className="ml-2 font-medium"
+            className="font-medium text-xs whitespace-nowrap"
           >
             {getStatusText(ubs.status)}
           </Badge>
         </div>
       </CardHeader>
       
-      <CardContent className="space-y-6 p-6">
-        <div className="space-y-5">
+      <CardContent className="space-y-4 sm:space-y-6 p-4 sm:p-6">
+        <div className="space-y-4 sm:space-y-5">
           <div className="flex items-center text-sm">
-            <div className="p-2.5 bg-gradient-to-br from-primary/12 to-primary/18 rounded-xl mr-3 shadow-sm">
+            <div className="p-2 sm:p-2.5 bg-gradient-to-br from-primary/12 to-primary/18 rounded-xl mr-3 shadow-sm">
               <MapPin className="h-4 w-4 text-primary" />
             </div>
-            <div>
-              <p className="font-medium text-foreground">Localização</p>
-              <p className="text-muted-foreground">{ubs.localidade}</p>
+            <div className="min-w-0 flex-1">
+              <p className="font-medium text-foreground text-xs sm:text-sm">Localização</p>
+              <p className="text-muted-foreground text-xs sm:text-sm break-words">{ubs.localidade}</p>
             </div>
           </div>
           
           <div className="flex items-center text-sm">
-            <div className="p-2.5 bg-gradient-to-br from-primary/12 to-primary/18 rounded-xl mr-3 shadow-sm">
+            <div className="p-2 sm:p-2.5 bg-gradient-to-br from-primary/12 to-primary/18 rounded-xl mr-3 shadow-sm">
               <Clock className="h-4 w-4 text-primary" />
             </div>
-            <div>
-              <p className="font-medium text-foreground">Horário de Atendimento</p>
-              <p className="text-muted-foreground">{ubs.horarios}</p>
+            <div className="min-w-0 flex-1">
+              <p className="font-medium text-foreground text-xs sm:text-sm">Horário de Atendimento</p>
+              <p className="text-muted-foreground text-xs sm:text-sm break-words">{ubs.horarios}</p>
             </div>
           </div>
           
           <div className="flex items-center text-sm">
-            <div className="p-2.5 bg-gradient-to-br from-primary/12 to-primary/18 rounded-xl mr-3 shadow-sm">
+            <div className="p-2 sm:p-2.5 bg-gradient-to-br from-primary/12 to-primary/18 rounded-xl mr-3 shadow-sm">
               <User className="h-4 w-4 text-primary" />
             </div>
-            <div>
-              <p className="font-medium text-foreground">Responsável Técnico</p>
-              <p className="text-muted-foreground">{ubs.responsavel}</p>
+            <div className="min-w-0 flex-1">
+              <p className="font-medium text-foreground text-xs sm:text-sm">Responsável Técnico</p>
+              <p className="text-muted-foreground text-xs sm:text-sm break-words">{ubs.responsavel}</p>
             </div>
           </div>
 
           <div className="flex items-center text-sm">
-            <div className="p-2.5 bg-gradient-to-br from-primary/12 to-primary/18 rounded-xl mr-3 shadow-sm">
+            <div className="p-2 sm:p-2.5 bg-gradient-to-br from-primary/12 to-primary/18 rounded-xl mr-3 shadow-sm">
               <Phone className="h-4 w-4 text-primary" />
             </div>
-            <div>
-              <p className="font-medium text-foreground">Contato</p>
-              <p className="text-muted-foreground">Disponível no local</p>
+            <div className="min-w-0 flex-1">
+              <p className="font-medium text-foreground text-xs sm:text-sm">Contato</p>
+              <p className="text-muted-foreground text-xs sm:text-sm">Disponível no local</p>
             </div>
           </div>
         </div>
@@ -100,18 +113,18 @@ const UBSCard = ({ ubs }: UBSCardProps) => {
         <Separator />
 
         <div className="space-y-4">
-          <div className="text-center bg-gradient-to-r from-primary/8 to-primary/12 p-4 rounded-xl">
-            <h4 className="font-semibold text-primary mb-2">Lista de Medicamentos</h4>
+          <div className="text-center bg-gradient-to-r from-primary/8 to-primary/12 p-3 sm:p-4 rounded-xl">
+            <h4 className="font-semibold text-primary mb-2 text-sm sm:text-base">Lista de Medicamentos</h4>
             <p className="text-xs text-muted-foreground">
               Baixe a lista atualizada dos medicamentos disponíveis
             </p>
           </div>
 
-          <div className="flex items-center justify-between gap-3">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
             <Button
               onClick={handleDownload}
               disabled={!ubs.pdfUrl}
-              className="flex-1"
+              className="w-full sm:flex-1 text-sm"
               variant={ubs.pdfUrl ? "default" : "secondary"}
             >
               <Download className="h-4 w-4 mr-2" />
@@ -122,6 +135,7 @@ const UBSCard = ({ ubs }: UBSCardProps) => {
               <QRCodeComponent 
                 value={ubs.pdfUrl || '#'} 
                 disabled={!ubs.pdfUrl}
+                size={isMobile ? 60 : 80}
               />
             </div>
           </div>

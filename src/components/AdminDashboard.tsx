@@ -510,7 +510,11 @@ const AdminDashboard = () => {
                           variant={isLinked ? "default" : "outline"}
                           size="sm"
                           onClick={() => toggleUserUBS(user.id, ubs.id)}
-                          className="justify-between"
+                          className={`justify-between transition-all duration-200 ${
+                            isLinked 
+                              ? "bg-green-600 hover:bg-green-700 text-white border-green-600" 
+                              : "border-gray-300 hover:border-green-400 hover:bg-green-50"
+                          }`}
                         >
                           <span>{ubs.nome}</span>
                           {isLinked ? (

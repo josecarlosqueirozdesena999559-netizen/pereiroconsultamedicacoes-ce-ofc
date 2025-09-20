@@ -54,15 +54,15 @@ const Index = () => {
       <Header />
       
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-primary via-[hsl(120_75%_25%)] to-primary text-primary-foreground py-20">
+      <section className="bg-gradient-to-r from-primary via-[hsl(120_75%_25%)] to-primary text-primary-foreground py-16 sm:py-20">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6">
+          <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold mb-4 sm:mb-6">
             Consulta de Medicações
           </h1>
-          <p className="text-xl md:text-2xl opacity-95 mb-4 font-medium">
+          <p className="text-lg sm:text-xl md:text-2xl opacity-95 mb-3 sm:mb-4 font-medium">
             Sistema Integrado de Saúde Pública
           </p>
-          <p className="text-lg opacity-85 max-w-4xl mx-auto leading-relaxed">
+          <p className="text-sm sm:text-lg opacity-85 max-w-4xl mx-auto leading-relaxed px-4">
             Acesse informações atualizadas sobre medicamentos disponíveis em todas as 
             Unidades Básicas de Saúde do município de Pereiro. Sistema oficial da 
             Prefeitura Municipal para garantir transparência e facilitar o acesso aos serviços de saúde.
@@ -71,33 +71,33 @@ const Index = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 -mt-12">
+      <section className="py-12 sm:py-16 -mt-8 sm:-mt-12">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 mb-12 sm:mb-16">
             <Card className="bg-white shadow-xl border-2 border-primary/10 hover:border-primary/30 transition-all duration-300">
-              <CardContent className="p-8 text-center">
-                <Building2 className="h-12 w-12 text-primary mx-auto mb-6" strokeWidth={1.5} />
-                <h3 className="text-4xl font-bold text-primary mb-3">{totalUBS}</h3>
-                <p className="text-muted-foreground font-medium">Unidades Cadastradas</p>
-                <p className="text-sm text-muted-foreground mt-1">Em todo o município</p>
+              <CardContent className="p-6 sm:p-8 text-center">
+                <Building2 className="h-10 sm:h-12 w-10 sm:w-12 text-primary mx-auto mb-4 sm:mb-6" strokeWidth={1.5} />
+                <h3 className="text-3xl sm:text-4xl font-bold text-primary mb-2 sm:mb-3">{totalUBS}</h3>
+                <p className="text-muted-foreground font-medium text-sm sm:text-base">Unidades Cadastradas</p>
+                <p className="text-xs sm:text-sm text-muted-foreground mt-1">Em todo o município</p>
               </CardContent>
             </Card>
             
             <Card className="bg-white shadow-xl border-2 border-success/10 hover:border-success/30 transition-all duration-300">
-              <CardContent className="p-8 text-center">
-                <Users className="h-12 w-12 text-success mx-auto mb-6" strokeWidth={1.5} />
-                <h3 className="text-4xl font-bold text-success mb-3">{ubsAbertas}</h3>
-                <p className="text-muted-foreground font-medium">UBS em Funcionamento</p>
-                <p className="text-sm text-muted-foreground mt-1">Atendendo a população</p>
+              <CardContent className="p-6 sm:p-8 text-center">
+                <Users className="h-10 sm:h-12 w-10 sm:w-12 text-success mx-auto mb-4 sm:mb-6" strokeWidth={1.5} />
+                <h3 className="text-3xl sm:text-4xl font-bold text-success mb-2 sm:mb-3">{ubsAbertas}</h3>
+                <p className="text-muted-foreground font-medium text-sm sm:text-base">UBS em Funcionamento</p>
+                <p className="text-xs sm:text-sm text-muted-foreground mt-1">Atendendo a população</p>
               </CardContent>
             </Card>
             
             <Card className="bg-white shadow-xl border-2 border-info/10 hover:border-info/30 transition-all duration-300">
-              <CardContent className="p-8 text-center">
-                <FileText className="h-12 w-12 text-info mx-auto mb-6" strokeWidth={1.5} />
-                <h3 className="text-4xl font-bold text-info mb-3">{ubsComPDF}</h3>
-                <p className="text-muted-foreground font-medium">Listas de Medicamentos</p>
-                <p className="text-sm text-muted-foreground mt-1">Atualizadas e disponíveis</p>
+              <CardContent className="p-6 sm:p-8 text-center">
+                <FileText className="h-10 sm:h-12 w-10 sm:w-12 text-info mx-auto mb-4 sm:mb-6" strokeWidth={1.5} />
+                <h3 className="text-3xl sm:text-4xl font-bold text-info mb-2 sm:mb-3">{ubsComPDF}</h3>
+                <p className="text-muted-foreground font-medium text-sm sm:text-base">Listas de Medicamentos</p>
+                <p className="text-xs sm:text-sm text-muted-foreground mt-1">Atualizadas e disponíveis</p>
               </CardContent>
             </Card>
           </div>
@@ -105,42 +105,42 @@ const Index = () => {
       </section>
 
       {/* UBS Section */}
-      <section className="py-16 bg-gradient-to-b from-background to-secondary/20">
+      <section className="py-12 sm:py-16 bg-gradient-to-b from-background to-secondary/20">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-primary mb-6">
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-2xl sm:text-4xl font-bold text-primary mb-4 sm:mb-6">
               Nossas Unidades Básicas de Saúde
             </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-10 leading-relaxed">
+            <p className="text-base sm:text-xl text-muted-foreground max-w-3xl mx-auto mb-8 sm:mb-10 leading-relaxed px-4">
               Encontre a UBS mais próxima de você e acesse informações detalhadas sobre 
               horários, responsáveis e listas atualizadas de medicamentos disponíveis.
             </p>
             
             {/* Search Bar */}
-            <div className="max-w-lg mx-auto relative">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5" />
+            <div className="max-w-lg mx-auto relative px-4">
+              <Search className="absolute left-8 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 sm:h-5 w-4 sm:w-5" />
               <Input
                 type="text"
-                placeholder="Buscar por nome da UBS, localidade ou responsável..."
+                placeholder="Buscar UBS, localidade ou responsável..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-12 py-3 text-base border-2 border-primary/20 focus:border-primary"
+                className="pl-12 py-2 sm:py-3 text-sm sm:text-base border-2 border-primary/20 focus:border-primary"
               />
             </div>
           </div>
 
           {filteredUBS.length === 0 ? (
             <Card className="max-w-md mx-auto">
-              <CardContent className="p-8 text-center">
-                <MapPin className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                <h3 className="text-lg font-semibold mb-2">Nenhuma UBS encontrada</h3>
-                <p className="text-muted-foreground">
+              <CardContent className="p-6 sm:p-8 text-center">
+                <MapPin className="h-10 sm:h-12 w-10 sm:w-12 text-muted-foreground mx-auto mb-3 sm:mb-4" />
+                <h3 className="text-base sm:text-lg font-semibold mb-2">Nenhuma UBS encontrada</h3>
+                <p className="text-sm sm:text-base text-muted-foreground">
                   {searchTerm ? 'Tente ajustar sua busca' : 'Nenhuma UBS cadastrada no sistema'}
                 </p>
               </CardContent>
             </Card>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8">
               {filteredUBS.map((ubs) => (
                 <UBSCard key={ubs.id} ubs={ubs} />
               ))}

@@ -15,9 +15,11 @@ const QRCodeComponent = ({ value, size = 80, disabled = false }: QRCodeComponent
     if (canvasRef.current && value && value !== '#' && !disabled) {
       QRCode.toCanvas(canvasRef.current, value, {
         width: size,
-        margin: 1,
+        margin: 2,
+        scale: 8,
+        errorCorrectionLevel: 'M',
         color: {
-          dark: '#166534', // primary color
+          dark: '#000000',
           light: '#FFFFFF'
         }
       }).catch(console.error);

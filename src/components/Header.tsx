@@ -19,13 +19,13 @@ const Header = () => {
   return (
     <header className="bg-white border-b-2 border-primary shadow-lg">
       {/* Logo Section */}
-      <div className="bg-white py-3">
+      <div className="bg-white py-2 sm:py-3">
         <div className="container mx-auto px-4">
           <div className="flex justify-center">
             <img 
               src={logoPereiro} 
               alt="Prefeitura Municipal de Pereiro" 
-              className="h-16 w-auto drop-shadow-md"
+              className="h-12 sm:h-16 w-auto drop-shadow-md"
             />
           </div>
         </div>
@@ -33,30 +33,30 @@ const Header = () => {
       
       {/* Navigation Section */}
       <div className="bg-gradient-to-r from-primary to-[hsl(120_75%_25%)] text-primary-foreground">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
+        <div className="container mx-auto px-4 py-3 sm:py-4">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0">
+            <div className="flex items-center space-x-4 text-center sm:text-left">
               <div>
-                <h1 className="text-xl font-bold">Sistema UBS Pereiro</h1>
-                <p className="text-sm opacity-90">Consulta de Medicações por Unidade Básica de Saúde</p>
+                <h1 className="text-lg sm:text-xl font-bold">Sistema UBS Pereiro</h1>
+                <p className="text-xs sm:text-sm opacity-90">Consulta de Medicações por Unidade Básica de Saúde</p>
               </div>
             </div>
             
-            <nav className="flex items-center space-x-4">
+            <nav className="flex items-center space-x-2 sm:space-x-4">
               {!isHomePage && (
                 <Button
                   variant="ghost"
                   onClick={() => navigate('/')}
-                  className="text-primary-foreground hover:bg-white/10"
+                  className="text-primary-foreground hover:bg-white/10 text-sm"
                 >
-                  <Home className="h-4 w-4 mr-2" />
+                  <Home className="h-4 w-4 mr-1 sm:mr-2" />
                   Início
                 </Button>
               )}
               
               {isAuthenticated ? (
-                <div className="flex items-center space-x-4">
-                  <span className="text-sm opacity-90">
+                <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                  <span className="text-xs sm:text-sm opacity-90 text-center sm:text-left">
                     Olá, <span className="font-semibold">{user?.login}</span>
                     {user?.tipo === 'admin' && (
                       <span className="ml-2 text-xs bg-white/20 px-2 py-1 rounded">
@@ -67,9 +67,9 @@ const Header = () => {
                   <Button
                     variant="ghost"
                     onClick={handleLogout}
-                    className="text-primary-foreground hover:bg-white/10"
+                    className="text-primary-foreground hover:bg-white/10 text-sm"
                   >
-                    <LogOut className="h-4 w-4 mr-2" />
+                    <LogOut className="h-4 w-4 mr-1 sm:mr-2" />
                     Sair
                   </Button>
                 </div>
@@ -77,7 +77,7 @@ const Header = () => {
                 <Button
                   variant="ghost"
                   onClick={() => navigate('/login')}
-                  className="text-primary-foreground hover:bg-white/10"
+                  className="text-primary-foreground hover:bg-white/10 text-sm"
                 >
                   Entrar
                 </Button>
