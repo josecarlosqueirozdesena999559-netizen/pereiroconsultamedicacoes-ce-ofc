@@ -1,0 +1,141 @@
+import { MapPin, Clock, User, Download, Calendar, Phone, Users, Building } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
+import { UBS } from '@/types';
+import QRCodeComponent from './QRCodeComponent';
+
+interface UBSCardProps {
+  ubs: UBS;
+}
+
+const UBSCard = ({ ubs }: UBSCardProps) => {
+  const handleDownload = () => {
+    if (ubs.pdfUrl) {
+      const link = document.createElement('a');
+      link.href = ubs.pdfUrl;
+      link.download = `medicacoes_${ubs.nome.replace(/\s+/g, '_')}.pdf`;
+      link.click();
+    }
+  };
+
+  const getStatusColor = (status: 'aberto' | 'fechado') => {
+    return status === 'aberto' ? 'default' : 'destructive';
+  };
+
+  const getStatusText = (status: 'aberto' | 'fechado') => {
+    return status === 'aberto' ? 'Em Funcionamento' : 'Temporariamente Fechado';
+  };
+
+  return (
+    <Card className="hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border-2 hover:border-primary/40 bg-gradient-to-br from-card to-card/95 backdrop-blur-sm">
+      <CardHeader className="pb-4 bg-gradient-to-r from-primary/8 to-primary/12 rounded-t-lg">
+        <div className="flex items-start justify-between">
+          <div className="flex items-center space-x-3">
+            <div className="p-3 bg-gradient-to-br from-primary/15 to-primary/20 rounded-xl shadow-sm">
+              <Building className="h-5 w-5 text-primary" />
+            </div>
+            <div>
+              <CardTitle className="text-lg font-bold text-primary">
+                {ubs.nome}
+              </CardTitle>
+              <p className="text-sm text-muted-foreground font-medium">
+                Unidade Básica de Saúde
+              </p>
+            </div>
+          </div>
+          <Badge 
+            variant={getStatusColor(ubs.status) as any}
+            className="ml-2 font-medium"
+          >
+            {getStatusText(ubs.status)}
+          </Badge>
+        </div>
+      </CardHeader>
+      
+      <CardContent className="space-y-6 p-6">
+        <div className="space-y-5">
+          <div className="flex items-center text-sm">
+            <div className="p-2.5 bg-gradient-to-br from-primary/12 to-primary/18 rounded-xl mr-3 shadow-sm">
+              <MapPin className="h-4 w-4 text-primary" />
+            </div>
+            <div>
+              <p className="font-medium text-foreground">Localização</p>
+              <p className="text-muted-foreground">{ubs.localidade}</p>
+            </div>
+          </div>
+          
+          <div className="flex items-center text-sm">
+            <div className="p-2.5 bg-gradient-to-br from-primary/12 to-primary/18 rounded-xl mr-3 shadow-sm">
+              <Clock className="h-4 w-4 text-primary" />
+            </div>
+            <div>
+              <p className="font-medium text-foreground">Horário de Atendimento</p>
+              <p className="text-muted-foreground">{ubs.horarios}</p>
+            </div>
+          </div>
+          
+          <div className="flex items-center text-sm">
+            <div className="p-2.5 bg-gradient-to-br from-primary/12 to-primary/18 rounded-xl mr-3 shadow-sm">
+              <User className="h-4 w-4 text-primary" />
+            </div>
+            <div>
+              <p className="font-medium text-foreground">Responsável Técnico</p>
+              <p className="text-muted-foreground">{ubs.responsavel}</p>
+            </div>
+          </div>
+
+          <div className="flex items-center text-sm">
+            <div className="p-2.5 bg-gradient-to-br from-primary/12 to-primary/18 rounded-xl mr-3 shadow-sm">
+              <Phone className="h-4 w-4 text-primary" />
+            </div>
+            <div>
+              <p className="font-medium text-foreground">Contato</p>
+              <p className="text-muted-foreground">Disponível no local</p>
+            </div>
+          </div>
+        </div>
+
+        <Separator />
+
+        <div className="space-y-4">
+          <div className="text-center bg-gradient-to-r from-primary/8 to-primary/12 p-4 rounded-xl">
+            <h4 className="font-semibold text-primary mb-2">Lista de Medicamentos</h4>
+            <p className="text-xs text-muted-foreground">
+              Baixe a lista atualizada dos medicamentos disponíveis
+            </p>
+          </div>
+
+          <div className="flex items-center justify-between gap-3">
+            <Button
+              onClick={handleDownload}
+              disabled={!ubs.pdfUrl}
+              className="flex-1"
+              variant={ubs.pdfUrl ? "default" : "secondary"}
+            >
+              <Download className="h-4 w-4 mr-2" />
+              {ubs.pdfUrl ? 'Baixar Lista PDF' : 'Lista Indisponível'}
+            </Button>
+            
+            <div className="flex-shrink-0">
+              <QRCodeComponent 
+                value={ubs.pdfUrl || '#'} 
+                disabled={!ubs.pdfUrl}
+              />
+            </div>
+          </div>
+          
+          {ubs.pdfUltimaAtualizacao && (
+            <div className="flex items-center justify-center text-xs text-muted-foreground bg-muted/50 p-2 rounded">
+              <Calendar className="h-3 w-3 mr-1" />
+              <span>Atualizada em: {ubs.pdfUltimaAtualizacao}</span>
+            </div>
+          )}
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
+export default UBSCard;

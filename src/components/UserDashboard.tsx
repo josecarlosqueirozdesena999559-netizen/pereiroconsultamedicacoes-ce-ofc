@@ -1,0 +1,198 @@
+import { useState, useEffect } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
+import { Upload, Download, Calendar, FileText, AlertCircle } from 'lucide-react';
+import { UBS } from '@/types';
+import { getUBS, savePDF, getPDF } from '@/lib/storage';
+
+const UserDashboard = () => {
+  const [ubsList, setUbsList] = useState<UBS[]>([]);
+  const [uploadingUBS, setUploadingUBS] = useState<string | null>(null);
+  const { user } = useAuth();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    if (user) {
+      loadUserUBS();
+    }
+  }, [user]);
+
+  const loadUserUBS = async () => {
+    try {
+      const allUBS = await getUBS();
+      const userUBS = allUBS.filter(ubs => user?.ubsVinculadas.includes(ubs.id));
+      setUbsList(userUBS);
+    } catch (error) {
+      console.error('Erro ao carregar UBS do usuário:', error);
+    }
+  };
+
+  const handleFileUpload = async (ubsId: string, file: File) => {
+    if (!file) return;
+
+    // Validar se é PDF
+    if (file.type !== 'application/pdf') {
+      toast({
+        title: "Formato inválido",
+        description: "Por favor, selecione apenas arquivos PDF.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Validar tamanho (máximo 10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      toast({
+        title: "Arquivo muito grande",
+        description: "O arquivo deve ter no máximo 10MB.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setUploadingUBS(ubsId);
+
+    try {
+      await savePDF(ubsId, file);
+      
+      toast({
+        title: "PDF atualizado com sucesso!",
+        description: "O arquivo de medicações foi atualizado.",
+      });
+      
+      loadUserUBS();
+    } catch (error) {
+      toast({
+        title: "Erro no upload",
+        description: "Ocorreu um erro ao salvar o arquivo.",
+        variant: "destructive",
+      });
+    } finally {
+      setUploadingUBS(null);
+    }
+  };
+
+  const handleDownload = (ubs: UBS) => {
+    if (ubs.pdfUrl) {
+      const link = document.createElement('a');
+      link.href = ubs.pdfUrl;
+      link.download = `medicacoes_${ubs.nome.replace(/\s+/g, '_')}.pdf`;
+      link.click();
+    }
+  };
+
+  const triggerFileInput = (ubsId: string) => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.pdf';
+    input.onchange = (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (file) {
+        handleFileUpload(ubsId, file);
+      }
+    };
+    input.click();
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-primary">Meu Dashboard</h1>
+          <p className="text-muted-foreground">
+            Gerencie os PDFs de medicações das suas UBS
+          </p>
+        </div>
+      </div>
+
+      {ubsList.length === 0 ? (
+        <Card>
+          <CardContent className="flex flex-col items-center justify-center py-12">
+            <AlertCircle className="h-12 w-12 text-muted-foreground mb-4" />
+            <h3 className="text-lg font-semibold mb-2">Nenhuma UBS vinculada</h3>
+            <p className="text-muted-foreground text-center">
+              Você não possui UBS vinculadas ao seu usuário. 
+              Entre em contato com o administrador para solicitar acesso.
+            </p>
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {ubsList.map((ubs) => (
+            <Card key={ubs.id} className="hover:shadow-lg transition-all duration-300">
+              <CardHeader className="pb-4">
+                <CardTitle className="text-lg font-semibold text-primary">
+                  {ubs.nome}
+                </CardTitle>
+                <CardDescription className="text-sm">
+                  {ubs.localidade} • {ubs.horarios}
+                </CardDescription>
+              </CardHeader>
+              
+              <CardContent className="space-y-4">
+                <div className="text-sm text-muted-foreground">
+                  <p><strong>Responsável:</strong> {ubs.responsavel}</p>
+                  {ubs.pdfUltimaAtualizacao && (
+                    <div className="flex items-center mt-2">
+                      <Calendar className="h-3 w-3 mr-1" />
+                      <span>Última atualização: {ubs.pdfUltimaAtualizacao}</span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="border-t pt-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <Label className="text-sm font-medium">Arquivo PDF</Label>
+                    {ubs.pdfUrl && (
+                      <FileText className="h-4 w-4 text-success" />
+                    )}
+                  </div>
+
+                  <div className="space-y-2">
+                    <Button
+                      onClick={() => triggerFileInput(ubs.id)}
+                      disabled={uploadingUBS === ubs.id}
+                      className="w-full"
+                      variant={ubs.pdfUrl ? "outline" : "default"}
+                    >
+                      <Upload className="h-4 w-4 mr-2" />
+                      {uploadingUBS === ubs.id 
+                        ? 'Enviando...' 
+                        : ubs.pdfUrl 
+                          ? 'Atualizar PDF' 
+                          : 'Enviar PDF'
+                      }
+                    </Button>
+
+                    {ubs.pdfUrl && (
+                      <Button
+                        onClick={() => handleDownload(ubs)}
+                        variant="ghost"
+                        className="w-full"
+                      >
+                        <Download className="h-4 w-4 mr-2" />
+                        Baixar PDF Atual
+                      </Button>
+                    )}
+                  </div>
+
+                  <div className="text-xs text-muted-foreground bg-muted/50 p-2 rounded">
+                    <p><strong>Requisitos:</strong></p>
+                    <p>• Formato: PDF apenas</p>
+                    <p>• Tamanho máximo: 10MB</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default UserDashboard;
