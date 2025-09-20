@@ -132,7 +132,7 @@ export const getUsers = async (): Promise<User[]> => {
       .select('*');
 
     return (usuarios || []).map(usuario => {
-      const userVinculacoes = vinculacoes?.filter(v => v.usuario_id === usuario.id) || [];
+      const userVinculacoes = vinculacoes?.filter(v => v.user_id === usuario.id) || [];
       return transformUsuarioToUser(usuario, userVinculacoes);
     });
   } catch (error) {
@@ -159,7 +159,7 @@ export const addUser = async (user: Omit<User, 'id' | 'createdAt' | 'updatedAt'>
     // Create user-posto relationships
     if (user.ubsVinculadas.length > 0) {
       const vinculacoes = user.ubsVinculadas.map(postoId => ({
-        usuario_id: data.id,
+        user_id: data.id,
         posto_id: postoId
       }));
 
@@ -200,12 +200,12 @@ export const updateUser = async (id: string, updates: Partial<User>): Promise<Us
       await supabase
         .from('usuario_posto')
         .delete()
-        .eq('usuario_id', id);
+        .eq('user_id', id);
 
       // Add new relationships
       if (updates.ubsVinculadas.length > 0) {
         const vinculacoes = updates.ubsVinculadas.map(postoId => ({
-          usuario_id: id,
+          user_id: id,
           posto_id: postoId
         }));
 
@@ -252,7 +252,7 @@ export const authenticateUser = async (login: string, senha: string): Promise<Us
     const { data: vinculacoes } = await supabase
       .from('usuario_posto')
       .select('posto_id')
-      .eq('usuario_id', usuario.id);
+      .eq('user_id', usuario.id);
 
     return transformUsuarioToUser(usuario, vinculacoes || []);
   } catch (error) {
