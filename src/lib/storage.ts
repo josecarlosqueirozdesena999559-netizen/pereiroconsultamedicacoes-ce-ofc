@@ -47,9 +47,41 @@ export const getUBS = async (): Promise<UBS[]> => {
       .from('arquivos_pdf')
       .select('*');
 
+    // Get all users and their UBS links
+    const { data: usuarios } = await supabase
+      .from('usuarios')
+      .select('id, nome, email, tipo');
+
+    const { data: vinculacoes } = await supabase
+      .from('usuario_posto')
+      .select('user_id, posto_id');
+
     return (postos || []).map(posto => {
       const pdf = pdfs?.find(p => p.posto_id === posto.id);
-      return transformPostoToUBS(posto, pdf);
+      
+      // Find responsible user for this posto
+      const vinculacao = vinculacoes?.find(v => v.posto_id === posto.id);
+      let responsavel = 'Não definido';
+      
+      if (vinculacao) {
+        const responsavelUser = usuarios?.find(u => u.id === vinculacao.user_id && u.tipo === 'responsavel');
+        if (responsavelUser) {
+          responsavel = responsavelUser.nome || responsavelUser.email;
+        }
+      }
+      
+      return {
+        id: posto.id,
+        nome: posto.nome,
+        localidade: posto.localidade,
+        horarios: posto.horario_funcionamento,
+        responsavel: responsavel,
+        status: posto.status as 'aberto' | 'fechado',
+        pdfUrl: pdf?.url,
+        pdfUltimaAtualizacao: pdf?.data_upload ? new Date(pdf.data_upload).toLocaleDateString('pt-BR') : undefined,
+        createdAt: posto.atualizado_em || new Date().toISOString(),
+        updatedAt: posto.atualizado_em || new Date().toISOString()
+      };
     });
   } catch (error) {
     console.error('Erro ao buscar UBS:', error);

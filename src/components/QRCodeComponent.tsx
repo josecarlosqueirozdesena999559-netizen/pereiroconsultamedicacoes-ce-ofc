@@ -13,11 +13,18 @@ const QRCodeComponent = ({ value, size = 80, disabled = false }: QRCodeComponent
 
   useEffect(() => {
     if (canvasRef.current && value && value !== '#' && !disabled) {
-      QRCode.toCanvas(canvasRef.current, value, {
+      // Ensure the URL is properly formatted
+      let qrValue = value;
+      
+      if (value && !value.startsWith('http://') && !value.startsWith('https://')) {
+        qrValue = `https://${value}`;
+      }
+      
+      QRCode.toCanvas(canvasRef.current, qrValue, {
         width: size,
         margin: 2,
         scale: 8,
-        errorCorrectionLevel: 'M',
+        errorCorrectionLevel: 'H', // Higher error correction for better scanning
         color: {
           dark: '#000000',
           light: '#FFFFFF'
@@ -40,7 +47,7 @@ const QRCodeComponent = ({ value, size = 80, disabled = false }: QRCodeComponent
   return (
     <div className="flex flex-col items-center">
       <canvas ref={canvasRef} className="rounded border" />
-      <span className="text-xs text-muted-foreground mt-1">QR Code</span>
+      <span className="text-xs text-muted-foreground mt-1">Escaneie para baixar</span>
     </div>
   );
 };
