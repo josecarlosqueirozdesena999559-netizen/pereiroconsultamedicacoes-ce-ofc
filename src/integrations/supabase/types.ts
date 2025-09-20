@@ -84,15 +84,15 @@ export type Database = {
       usuario_posto: {
         Row: {
           posto_id: string
-          usuario_id: string
+          user_id: string
         }
         Insert: {
           posto_id: string
-          usuario_id: string
+          user_id: string
         }
         Update: {
           posto_id?: string
-          usuario_id?: string
+          user_id?: string
         }
         Relationships: [
           {
@@ -104,7 +104,7 @@ export type Database = {
           },
           {
             foreignKeyName: "usuario_posto_usuario_id_fkey"
-            columns: ["usuario_id"]
+            columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "usuarios"
             referencedColumns: ["id"]
@@ -143,7 +143,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      fn_login: {
+        Args: { p_email: string; p_senha: string }
+        Returns: {
+          email: string
+          id: string
+          nome: string
+          tipo: string
+        }[]
+      }
     }
     Enums: {
       user_role: "admin" | "responsavel"
