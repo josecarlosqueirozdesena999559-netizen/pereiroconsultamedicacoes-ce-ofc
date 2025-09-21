@@ -35,20 +35,17 @@ const QRCodeComponent = ({ value, size = 160, disabled = false }: QRCodeComponen
       canvas.height = canvasSize;
       canvas.style.width = `${size}px`;
       canvas.style.height = `${size}px`;
+      // Ensure crisp rendering on desktop
+      // @ts-ignore
+      canvas.style.imageRendering = 'pixelated';
       
       QRCode.toCanvas(canvas, qrValue, {
         width: canvasSize,
-        margin: 1,
-        scale: 4,
-        errorCorrectionLevel: 'H', // Higher error correction for better scanning
+        margin: 3,
+        errorCorrectionLevel: 'H',
         color: {
           dark: '#000000',
           light: '#FFFFFF'
-        }
-      }).then(() => {
-        // Scale the canvas context for crisp rendering
-        if (ctx) {
-          ctx.scale(1/pixelRatio, 1/pixelRatio);
         }
       }).catch(console.error);
     }

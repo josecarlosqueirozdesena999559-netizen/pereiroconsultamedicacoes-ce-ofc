@@ -135,7 +135,7 @@ const UBSCard = ({ ubs }: UBSCardProps) => {
               <QRCodeComponent 
                 value={ubs.pdfUrl || '#'} 
                 disabled={!ubs.pdfUrl}
-                size={isMobile ? 60 : 80}
+                size={isMobile ? 60 : 200}
               />
             </div>
           </div>
