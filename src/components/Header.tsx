@@ -37,8 +37,8 @@ const Header = () => {
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0">
             <div className="flex items-center space-x-4 text-center sm:text-left">
               <div>
-                <h1 className="text-lg sm:text-xl font-bold">Sistema UBS Pereiro</h1>
-                <p className="text-xs sm:text-sm opacity-90">Consulta de Medicações por Unidade Básica de Saúde</p>
+                <h1 className="text-lg sm:text-xl font-bold">Consulta de Medicações</h1>
+                <p className="text-xs sm:text-sm opacity-90">Prefeitura Municipal de Pereiro</p>
               </div>
             </div>
             
@@ -51,6 +51,17 @@ const Header = () => {
                 >
                   <Home className="h-4 w-4 mr-1 sm:mr-2" />
                   Início
+                </Button>
+              )}
+              
+              {isAuthenticated && isHomePage && (
+                <Button
+                  variant="ghost"
+                  onClick={() => navigate('/dashboard')}
+                  className="text-primary-foreground hover:bg-white/10 text-sm"
+                >
+                  <Settings className="h-4 w-4 mr-1 sm:mr-2" />
+                  Área Admin
                 </Button>
               )}
               
