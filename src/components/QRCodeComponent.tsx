@@ -8,7 +8,7 @@ interface QRCodeComponentProps {
   disabled?: boolean;
 }
 
-const QRCodeComponent = ({ value, size = 80, disabled = false }: QRCodeComponentProps) => {
+const QRCodeComponent = ({ value, size = 160, disabled = false }: QRCodeComponentProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
