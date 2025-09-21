@@ -217,25 +217,46 @@ export const updateUser = async (id: string, updates: Partial<User>): Promise<Us
     if (updates.senha) updateData.senha = updates.senha;
     if (updates.tipo) updateData.tipo = updates.tipo;
 
-    const { data, error } = await supabase
-      .from('usuarios')
-      .update(updateData)
-      .eq('id', id)
-      .select()
-      .single();
+    let userRow: any = null;
 
-    if (error) throw error;
+    if (Object.keys(updateData).length > 0) {
+      const { data, error } = await supabase
+        .from('usuarios')
+        .update(updateData)
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      userRow = data;
+    } else {
+      // Fetch the current user to avoid PGRST116 when no columns are updated
+      const { data, error } = await supabase
+        .from('usuarios')
+        .select('*')
+        .eq('id', id)
+        .single();
+      if (error) throw error;
+      userRow = data;
+    }
 
     // Update user-posto relationships if provided
     if (updates.ubsVinculadas) {
-      // Remove existing relationships
+      // Remove existing relationships for this user
       await supabase
         .from('usuario_posto')
         .delete()
         .eq('user_id', id);
 
-      // Add new relationships
+      // Ensure exclusividade por posto: remova qualquer outro usuário vinculado aos mesmos postos
       if (updates.ubsVinculadas.length > 0) {
+        // Remove links for these postos from other users
+        await supabase
+          .from('usuario_posto')
+          .delete()
+          .in('posto_id', updates.ubsVinculadas);
+
+        // Add new relationships
         const vinculacoes = updates.ubsVinculadas.map(postoId => ({
           user_id: id,
           posto_id: postoId
@@ -244,10 +265,18 @@ export const updateUser = async (id: string, updates: Partial<User>): Promise<Us
         await supabase
           .from('usuario_posto')
           .insert(vinculacoes);
+
+        // Opcional: refletir também em postos.responsavel_id
+        for (const postoId of updates.ubsVinculadas) {
+          await supabase
+            .from('postos')
+            .update({ responsavel_id: id })
+            .eq('id', postoId);
+        }
       }
     }
 
-    return transformUsuarioToUser(data, updates.ubsVinculadas?.map(id => ({ posto_id: id })) || []);
+    return transformUsuarioToUser(userRow, updates.ubsVinculadas?.map(id => ({ posto_id: id })) || []);
   } catch (error) {
     console.error('Erro ao atualizar usuário:', error);
     return null;
@@ -264,6 +293,36 @@ export const deleteUser = async (id: string): Promise<boolean> => {
     return !error;
   } catch (error) {
     console.error('Erro ao deletar usuário:', error);
+    return false;
+  }
+};
+
+// Define vínculo 1:1 entre posto e responsável
+export const setPostoResponsavel = async (postoId: string, userId: string | null): Promise<boolean> => {
+  try {
+    // Remover qualquer vínculo existente para este posto
+    await supabase
+      .from('usuario_posto')
+      .delete()
+      .eq('posto_id', postoId);
+
+    // Atualizar o campo responsavel_id do posto
+    await supabase
+      .from('postos')
+      .update({ responsavel_id: userId })
+      .eq('id', postoId);
+
+    // Se houver usuário, criar novo vínculo
+    if (userId) {
+      const { error } = await supabase
+        .from('usuario_posto')
+        .insert({ user_id: userId, posto_id: postoId });
+      if (error) throw error;
+    }
+
+    return true;
+  } catch (error) {
+    console.error('Erro ao definir responsável do posto:', error);
     return false;
   }
 };

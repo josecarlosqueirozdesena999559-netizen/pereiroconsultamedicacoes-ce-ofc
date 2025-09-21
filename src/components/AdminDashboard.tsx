@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { useToast } from '@/hooks/use-toast';
 import { Plus, Edit2, Trash2, Building2, Users, UserPlus, Link, Unlink } from 'lucide-react';
 import { UBS, User } from '@/types';
-import { getUBS, addUBS, updateUBS, deleteUBS, getUsers, addUser, updateUser, deleteUser } from '@/lib/storage';
+import { getUBS, addUBS, updateUBS, deleteUBS, getUsers, addUser, updateUser, deleteUser, setPostoResponsavel } from '@/lib/storage';
 
 const AdminDashboard = () => {
   const [ubsList, setUbsList] = useState<UBS[]>([]);
@@ -216,35 +216,36 @@ const AdminDashboard = () => {
 
     try {
       const isLinked = user.ubsVinculadas.includes(ubsId);
-      const newUbsVinculadas = isLinked 
-        ? user.ubsVinculadas.filter(id => id !== ubsId)
-        : [...user.ubsVinculadas, ubsId];
 
-      const result = await updateUser(userId, { ubsVinculadas: newUbsVinculadas });
-      
-      if (result) {
-        // Update local state immediately for better UX
-        setUsersList(prevUsers => 
-          prevUsers.map(u => 
-            u.id === userId 
-              ? { ...u, ubsVinculadas: newUbsVinculadas }
-              : u
-          )
-        );
-        
-        // Also update UBS list to reflect the responsible change
-        await loadData();
-        
-        toast({
-          title: isLinked ? "Vinculação removida" : "Vinculação criada",
-          description: `Usuário ${isLinked ? 'desvinculado' : 'vinculado'} com sucesso.`,
-        });
-      }
+      // Aplicar vínculo 1:1 no banco
+      const ok = await setPostoResponsavel(ubsId, isLinked ? null : userId);
+      if (!ok) throw new Error('Falha ao atualizar vínculo');
+
+      // Atualizar estado local garantindo exclusividade
+      setUsersList(prev =>
+        prev.map(u => {
+          const filtered = u.ubsVinculadas.filter(id => id !== ubsId);
+          if (!isLinked && u.id === userId) {
+            return { ...u, ubsVinculadas: [...filtered, ubsId] };
+          }
+          return { ...u, ubsVinculadas: filtered };
+        })
+      );
+
+      await loadData();
+
+      const ubs = ubsList.find(u => u.id === ubsId);
+      toast({
+        title: isLinked ? 'Vinculação removida' : 'Vinculação criada',
+        description: isLinked
+          ? `Responsável removido de ${ubs?.nome ?? 'UBS'}.`
+          : `${user.login} definido como responsável de ${ubs?.nome ?? 'UBS'}.`,
+      });
     } catch (error) {
       toast({
-        title: "Erro",
-        description: "Erro ao atualizar vinculação.",
-        variant: "destructive",
+        title: 'Erro',
+        description: 'Erro ao atualizar vinculação.',
+        variant: 'destructive',
       });
     }
   };
