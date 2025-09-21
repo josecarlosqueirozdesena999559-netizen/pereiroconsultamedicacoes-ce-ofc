@@ -214,19 +214,39 @@ const AdminDashboard = () => {
     const user = usersList.find(u => u.id === userId);
     if (!user) return;
 
-    const isLinked = user.ubsVinculadas.includes(ubsId);
-    const newUbsVinculadas = isLinked 
-      ? user.ubsVinculadas.filter(id => id !== ubsId)
-      : [...user.ubsVinculadas, ubsId];
+    try {
+      const isLinked = user.ubsVinculadas.includes(ubsId);
+      const newUbsVinculadas = isLinked 
+        ? user.ubsVinculadas.filter(id => id !== ubsId)
+        : [...user.ubsVinculadas, ubsId];
 
-    await updateUser(userId, { ubsVinculadas: newUbsVinculadas });
-    await loadData();
-    
-    const ubs = ubsList.find(u => u.id === ubsId);
-    toast({
-      title: isLinked ? "Usuário desvinculado" : "Usuário vinculado",
-      description: `${user.login} ${isLinked ? 'foi desvinculado de' : 'foi vinculado à'} ${ubs?.nome}.`,
-    });
+      const result = await updateUser(userId, { ubsVinculadas: newUbsVinculadas });
+      
+      if (result) {
+        // Update local state immediately for better UX
+        setUsersList(prevUsers => 
+          prevUsers.map(u => 
+            u.id === userId 
+              ? { ...u, ubsVinculadas: newUbsVinculadas }
+              : u
+          )
+        );
+        
+        // Also update UBS list to reflect the responsible change
+        await loadData();
+        
+        toast({
+          title: isLinked ? "Vinculação removida" : "Vinculação criada",
+          description: `Usuário ${isLinked ? 'desvinculado' : 'vinculado'} com sucesso.`,
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Erro",
+        description: "Erro ao atualizar vinculação.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (

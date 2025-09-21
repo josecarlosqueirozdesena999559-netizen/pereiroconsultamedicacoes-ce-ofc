@@ -13,6 +13,13 @@ const QRCodeComponent = ({ value, size = 80, disabled = false }: QRCodeComponent
 
   useEffect(() => {
     if (canvasRef.current && value && value !== '#' && !disabled) {
+      // Clear previous content
+      const canvas = canvasRef.current;
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+      
       // Ensure the URL is properly formatted
       let qrValue = value;
       
@@ -20,14 +27,28 @@ const QRCodeComponent = ({ value, size = 80, disabled = false }: QRCodeComponent
         qrValue = `https://${value}`;
       }
       
-      QRCode.toCanvas(canvasRef.current, qrValue, {
-        width: size,
-        margin: 2,
-        scale: 8,
+      // Set canvas size before generating QR code
+      const pixelRatio = window.devicePixelRatio || 1;
+      const canvasSize = size * pixelRatio;
+      
+      canvas.width = canvasSize;
+      canvas.height = canvasSize;
+      canvas.style.width = `${size}px`;
+      canvas.style.height = `${size}px`;
+      
+      QRCode.toCanvas(canvas, qrValue, {
+        width: canvasSize,
+        margin: 1,
+        scale: 4,
         errorCorrectionLevel: 'H', // Higher error correction for better scanning
         color: {
           dark: '#000000',
           light: '#FFFFFF'
+        }
+      }).then(() => {
+        // Scale the canvas context for crisp rendering
+        if (ctx) {
+          ctx.scale(1/pixelRatio, 1/pixelRatio);
         }
       }).catch(console.error);
     }
