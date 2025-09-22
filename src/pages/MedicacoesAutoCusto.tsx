@@ -16,7 +16,7 @@ const MedicacoesAutoCusto = () => {
             Medicações Auto Custo
           </h1>
           <p className="text-lg sm:text-xl md:text-2xl opacity-95 mb-3 sm:mb-4 font-medium">
-            Programa de Assistência Farmacêutica
+            CAF - CENTRO DE ATENDIMENTO FARMACÊUTICO.
           </p>
           <p className="text-sm sm:text-lg opacity-85 max-w-4xl mx-auto leading-relaxed px-4">
             Acesso facilitado a medicamentos essenciais com valores subsidiados pela 
@@ -43,13 +43,13 @@ const MedicacoesAutoCusto = () => {
                     <AccordionContent className="pt-4 pb-6">
                       <div className="space-y-4">
                         <p className="text-muted-foreground leading-relaxed">
-                          Sistema que permite ao cidadão adquirir medicamentos essenciais por valores 
-                          subsidiados, garantindo acesso facilitado aos tratamentos básicos de saúde 
-                          através de parcerias com farmácias credenciadas do município.
+                         ✅ O que é a Farmácia de Alto Custo do SUS?
+                          Serviço do SUS que fornece gratuitamente medicamentos caros para doenças crônicas, raras ou graves. 
+                          A gestão é estadual, e não municipal.
                         </p>
                         <div className="p-4 bg-primary/5 rounded-lg border border-primary/20">
                           <p className="text-sm font-medium text-primary">
-                            <strong>Objetivo:</strong> Democratizar o acesso aos medicamentos básicos para famílias de baixa renda
+                            <strong>Objetivo:</strong> "Garantir o acesso a medicamentos essenciais para todas as famílias."
                           </p>
                         </div>
                       </div>
@@ -99,7 +99,7 @@ const MedicacoesAutoCusto = () => {
                             </div>
                             <div>
                               <p className="font-medium">Aquisição</p>
-                              <p className="text-sm text-muted-foreground">Retire com desconto na farmácia</p>
+                              <p className="text-sm text-muted-foreground">Pronto basta aguardar e verificar a retirada.</p>
                             </div>
                           </div>
                         </div>
@@ -120,7 +120,6 @@ const MedicacoesAutoCusto = () => {
                               <ul className="text-muted-foreground space-y-1">
                                 <li>• Receita médica válida</li>
                                 <li>• Documento com foto</li>
-                                <li>• Cartão do programa CAF</li>
                               </ul>
                             </div>
                           </div>
