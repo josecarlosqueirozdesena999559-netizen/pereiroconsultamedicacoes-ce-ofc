@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Search, MapPin, Building2, Users, FileText } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Search, MapPin, ChevronDown, Pill, Phone, MapPin as LocationIcon } from 'lucide-react';
 import Header from '@/components/Header';
 import UBSCard from '@/components/UBSCard';
 import { UBS } from '@/types';
@@ -45,9 +46,6 @@ const Index = () => {
     setFilteredUBS(filtered);
   };
 
-  const totalUBS = ubsList.length;
-  const ubsAbertas = ubsList.filter(ubs => ubs.status === 'aberto').length;
-  const ubsComPDF = ubsList.filter(ubs => ubs.pdfUrl).length;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-secondary/20">
@@ -70,42 +68,107 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Stats Section */}
+      {/* Medicações Auto Custo Section */}
       <section className="py-12 sm:py-16 -mt-8 sm:-mt-12">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 mb-12 sm:mb-16">
-            <Card className="bg-white shadow-xl border-2 border-primary/10 hover:border-primary/30 transition-all duration-300">
-              <CardContent className="p-6 sm:p-8 text-center">
-                <Building2 className="h-10 sm:h-12 w-10 sm:w-12 text-primary mx-auto mb-4 sm:mb-6" strokeWidth={1.5} />
-                <h3 className="text-3xl sm:text-4xl font-bold text-primary mb-2 sm:mb-3">{totalUBS}</h3>
-                <p className="text-muted-foreground font-medium text-sm sm:text-base">Unidades Cadastradas</p>
-                <p className="text-xs sm:text-sm text-muted-foreground mt-1">Em todo o município</p>
-              </CardContent>
-            </Card>
-            
-            <Card className="bg-white shadow-xl border-2 border-success/10 hover:border-success/30 transition-all duration-300">
-              <CardContent className="p-6 sm:p-8 text-center">
-                <Users className="h-10 sm:h-12 w-10 sm:w-12 text-success mx-auto mb-4 sm:mb-6" strokeWidth={1.5} />
-                <h3 className="text-3xl sm:text-4xl font-bold text-success mb-2 sm:mb-3">{ubsAbertas}</h3>
-                <p className="text-muted-foreground font-medium text-sm sm:text-base">UBS em Funcionamento</p>
-                <p className="text-xs sm:text-sm text-muted-foreground mt-1">Atendendo a população</p>
-              </CardContent>
-            </Card>
-            
-            <Card className="bg-white shadow-xl border-2 border-info/10 hover:border-info/30 transition-all duration-300">
-              <CardContent className="p-6 sm:p-8 text-center">
-                <FileText className="h-10 sm:h-12 w-10 sm:w-12 text-info mx-auto mb-4 sm:mb-6" strokeWidth={1.5} />
-                <h3 className="text-3xl sm:text-4xl font-bold text-info mb-2 sm:mb-3">{ubsComPDF}</h3>
-                <p className="text-muted-foreground font-medium text-sm sm:text-base">Listas de Medicamentos</p>
-                <p className="text-xs sm:text-sm text-muted-foreground mt-1">Atualizadas e disponíveis</p>
-              </CardContent>
-            </Card>
-          </div>
+        <div className="container mx-auto px-4 text-center">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button 
+                size="lg" 
+                className="mb-8 px-8 py-4 text-lg font-semibold bg-gradient-to-r from-primary to-[hsl(120_75%_25%)] hover:from-primary/90 hover:to-[hsl(120_75%_25%)]/90 shadow-lg"
+              >
+                <Pill className="mr-2 h-5 w-5" />
+                Medicações Auto Custo
+                <ChevronDown className="ml-2 h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-80 p-2 bg-background border-2 shadow-xl" align="center">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <DropdownMenuItem className="cursor-pointer p-4 rounded-md hover:bg-muted">
+                    <div className="flex items-center justify-between w-full">
+                      <span className="font-medium">O que é?</span>
+                      <ChevronDown className="h-4 w-4" />
+                    </div>
+                  </DropdownMenuItem>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-96 p-4 bg-background border shadow-xl ml-4" side="right">
+                  <div className="space-y-3">
+                    <h4 className="font-semibold text-primary">Programa Medicações Auto Custo</h4>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      Sistema que permite ao cidadão adquirir medicamentos essenciais por valores 
+                      subsidiados, garantindo acesso facilitado aos tratamentos básicos de saúde 
+                      através de parcerias com farmácias credenciadas.
+                    </p>
+                  </div>
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <DropdownMenuItem className="cursor-pointer p-4 rounded-md hover:bg-muted">
+                    <div className="flex items-center justify-between w-full">
+                      <span className="font-medium">Como funciona?</span>
+                      <ChevronDown className="h-4 w-4" />
+                    </div>
+                  </DropdownMenuItem>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-96 p-4 bg-background border shadow-xl ml-4" side="right">
+                  <div className="space-y-3">
+                    <h4 className="font-semibold text-primary">Funcionamento do Sistema</h4>
+                    <div className="text-sm text-muted-foreground space-y-2">
+                      <p>1. <strong>Cadastro:</strong> Realize seu cadastro no CAF com documentos pessoais</p>
+                      <p>2. <strong>Prescrição:</strong> Apresente receita médica válida</p>
+                      <p>3. <strong>Verificação:</strong> Consulte disponibilidade na lista de medicamentos</p>
+                      <p>4. <strong>Aquisição:</strong> Retire o medicamento com desconto nas farmácias credenciadas</p>
+                    </div>
+                  </div>
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <DropdownMenuItem className="cursor-pointer p-4 rounded-md hover:bg-muted">
+                    <div className="flex items-center justify-between w-full">
+                      <span className="font-medium">Mais informações - CAF</span>
+                      <ChevronDown className="h-4 w-4" />
+                    </div>
+                  </DropdownMenuItem>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-96 p-4 bg-background border shadow-xl ml-4" side="right">
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-primary">Centro de Atendimento Farmacêutico - CAF</h4>
+                    <div className="space-y-3 text-sm">
+                      <div className="flex items-start gap-2">
+                        <LocationIcon className="h-4 w-4 text-primary mt-1 flex-shrink-0" />
+                        <div>
+                          <p className="font-medium">Endereço:</p>
+                          <p className="text-muted-foreground">Rua Principal, 123 - Centro, Pereiro - CE</p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <Phone className="h-4 w-4 text-primary mt-1 flex-shrink-0" />
+                        <div>
+                          <p className="font-medium">Contato:</p>
+                          <p className="text-muted-foreground">(85) 3555-0000</p>
+                        </div>
+                      </div>
+                      <div>
+                        <p className="font-medium">Horário de Funcionamento:</p>
+                        <p className="text-muted-foreground">Segunda à Sexta: 7h às 17h</p>
+                        <p className="text-muted-foreground">Sábado: 7h às 12h</p>
+                      </div>
+                    </div>
+                  </div>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </section>
 
       {/* UBS Section */}
-      <section className="py-12 sm:py-16 bg-gradient-to-b from-background to-secondary/20">
+      <section className="py-8 sm:py-12 bg-gradient-to-b from-background to-secondary/20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12 sm:mb-16">
             <h2 className="text-2xl sm:text-4xl font-bold text-primary mb-4 sm:mb-6">
