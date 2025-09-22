@@ -19,8 +19,8 @@ const MedicacoesAutoCusto = () => {
             CAF - CENTRO DE ATENDIMENTO FARMACÊUTICO.
           </p>
           <p className="text-sm sm:text-lg opacity-85 max-w-4xl mx-auto leading-relaxed px-4">
-            Acesso facilitado a medicamentos essenciais com valores subsidiados pela 
-            Prefeitura Municipal de Pereiro através do Centro de Atendimento Farmacêutico (CAF).
+            Acesso facilitado a medicamentos essenciais com valores subsidiados pelo 
+            Governo Federal através do Centro de Atendimento Farmacêutico (CAF).
           </p>
         </div>
       </section>
