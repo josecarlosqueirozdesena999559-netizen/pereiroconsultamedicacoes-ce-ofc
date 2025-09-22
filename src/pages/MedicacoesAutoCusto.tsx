@@ -142,14 +142,6 @@ const MedicacoesAutoCusto = () => {
                             </div>
                           </div>
                         </div>
-
-                        <div className="p-4 bg-info/5 rounded-lg border border-info/20">
-                          <h4 className="font-semibold text-info mb-2">Informação Importante</h4>
-                          <p className="text-sm text-muted-foreground">
-                            O programa é destinado a famílias de baixa renda cadastradas no CadÚnico.
-                            Consulte a lista de medicamentos disponíveis no CAF para verificar a cobertura do seu tratamento.
-                          </p>
-                        </div>
                       </div>
                     </AccordionContent>
                   </AccordionItem>
