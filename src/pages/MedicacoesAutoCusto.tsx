@@ -69,7 +69,7 @@ const MedicacoesAutoCusto = () => {
                     <AccordionTrigger className="text-lg font-semibold text-success hover:no-underline">
                       <div className="flex items-center gap-3">
                         <Users className="h-5 w-5" />
-                        Como funciona?
+                        Como ter acesso aos medicamentos?
                       </div>
                     </AccordionTrigger>
                     <AccordionContent className="pt-4 pb-6">
