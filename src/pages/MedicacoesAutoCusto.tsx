@@ -165,4 +165,4 @@ const MedicacoesAutoCusto = () => {
     </div>
 
 
-Perguntar ao ChatGPT
+
