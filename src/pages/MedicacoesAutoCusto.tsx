@@ -74,7 +74,7 @@ const MedicacoesAutoCusto = () => {
                     </AccordionTrigger>
                     <AccordionContent className="pt-4 pb-6">
                       <div className="space-y-4">
-                        {/* 🔄 Substituição solicitada */}
+                        {/* 🔄 Texto principal de orientação */}
                         <div className="space-y-3">
                           <p className="text-muted-foreground leading-relaxed">
                             Após o atendimento médico e a prescrição de um medicamento pertencente ao elenco do CEAF (Elenco de medicamentos disponibilizados), o(a) usuário(a) deverá sair da consulta com os seguintes documentos devidamente preenchidos pelo profissional prescritor:
@@ -89,32 +89,10 @@ const MedicacoesAutoCusto = () => {
                           </ul>
                         </div>
 
-                        <div className="mt-6 p-4 bg-success/5 rounded-lg border border-success/20">
-                          <h4 className="font-semibold text-success mb-2">Documentos Necessários:</h4>
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-                            <div>
-                              <p className="font-medium mb-1">Para Cadastro:</p>
-                              <ul className="text-muted-foreground space-y-1">
-                                <li>• CPF e RG (original e cópia)</li>
-                                <li>• Comprovante de residência</li>
-                                <li>• Cartão SUS</li>
-                              </ul>
-                            </div>
-                            <div>
-                              <p className="font-medium mb-1">Para Aquisição:</p>
-                              <ul className="text-muted-foreground space-y-1">
-                                <li>• Receita médica válida</li>
-                                <li>• Documento com foto</li>
-                                <li>• Laudo</li>
-                              </ul>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* ✅ Botão de download do PDF */}
+                        {/* ✅ Botão de download do PDF (atualizado) */}
                         <div className="mt-4 text-center">
                           <a
-                            href="/docs/laudo.pdf"
+                            href="/mnt/data/laudo%20(1).pdf"
                             download
                             className="inline-flex items-center gap-2 px-4 py-2 bg-success text-white rounded-md hover:bg-success/90 transition-colors text-sm font-medium"
                           >
@@ -122,6 +100,11 @@ const MedicacoesAutoCusto = () => {
                             Baixar Laudo (PDF)
                           </a>
                         </div>
+
+                        {/* ✅ Texto solicitado abaixo do link */}
+                        <p className="text-sm text-muted-foreground text-center mt-3">
+                          Em posse dessa documentação ou para maiores esclarecimentos dirija-se a Central de Abastecimento Farmacêutico, situada a Rua Santos Dumont, 285, Centro.
+                        </p>
                       </div>
                     </AccordionContent>
                   </AccordionItem>
