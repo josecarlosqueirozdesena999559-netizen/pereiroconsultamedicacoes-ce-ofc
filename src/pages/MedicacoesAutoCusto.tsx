@@ -130,14 +130,6 @@ const MedicacoesAutoCusto = () => {
                                   <p className="text-sm text-muted-foreground">Pereiro - CE, 63460-000</p>
                                 </div>
                               </div>
-                              <div className="flex items-start gap-3">
-                                <Phone className="h-5 w-5 text-info mt-1 flex-shrink-0" />
-                                <div>
-                                  <p className="font-medium">Contato:</p>
-                                  <p className="text-sm text-muted-foreground">(85) 3555-0000</p>
-                                  <p className="text-sm text-muted-foreground">WhatsApp: (85) 9 9999-0000</p>
-                                </div>
-                              </div>
                             </div>
                             <div>
                               <div className="flex items-start gap-3">
