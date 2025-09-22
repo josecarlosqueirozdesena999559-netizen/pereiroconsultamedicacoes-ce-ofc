@@ -126,7 +126,7 @@ const MedicacoesAutoCusto = () => {
                                 <LocationIcon className="h-5 w-5 text-info mt-1 flex-shrink-0" />
                                 <div>
                                   <p className="font-medium">Endereço:</p>
-                                  <p className="text-sm text-muted-foreground">Rua Principal, 123 - Centro</p>
+                                  <p className="text-sm text-muted-foreground">Rua Santos Dumont - 283 Centro</p>
                                   <p className="text-sm text-muted-foreground">Pereiro - CE, 63460-000</p>
                                 </div>
                               </div>
@@ -137,8 +137,6 @@ const MedicacoesAutoCusto = () => {
                                 <div>
                                   <p className="font-medium">Funcionamento:</p>
                                   <p className="text-sm text-muted-foreground">Segunda à Sexta: 7h às 17h</p>
-                                  <p className="text-sm text-muted-foreground">Sábado: 7h às 12h</p>
-                                  <p className="text-sm text-muted-foreground">Domingo: Fechado</p>
                                 </div>
                               </div>
                             </div>
