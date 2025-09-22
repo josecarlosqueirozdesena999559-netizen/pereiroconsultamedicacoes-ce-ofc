@@ -30,13 +30,13 @@ const MedicacoesAutoCusto = () => {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto space-y-6 bg-white shadow-xl border-2 border-primary/10 rounded-xl p-8">
 
-            {/* ✅ Accordion modificado para manter menus abertos */}
             <Accordion
               type="multiple"
               defaultValue={['o-que-e', 'como-funciona', 'caf-info']}
               className="w-full space-y-4"
             >
 
+              {/* O que é */}
               <AccordionItem value="o-que-e" className="border border-primary/20 rounded-lg px-6">
                 <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
                   <div className="flex items-center gap-3">
@@ -62,6 +62,7 @@ const MedicacoesAutoCusto = () => {
                 </AccordionContent>
               </AccordionItem>
 
+              {/* Como ter acesso */}
               <AccordionItem value="como-funciona" className="border border-success/20 rounded-lg px-6">
                 <AccordionTrigger className="text-lg font-semibold text-success hover:no-underline">
                   <div className="flex items-center gap-3">
@@ -88,7 +89,6 @@ const MedicacoesAutoCusto = () => {
                       <li>Exames e outros documentos adicionais, dependendo da doença.</li>
                     </ul>
 
-                    {/* ✅ Botão de download do PDF */}
                     <div className="mt-6 text-center">
                       <a
                         href="/docs/laudo.pdf"
@@ -103,6 +103,7 @@ const MedicacoesAutoCusto = () => {
                 </AccordionContent>
               </AccordionItem>
 
+              {/* CAF Info */}
               <AccordionItem value="caf-info" className="border border-info/20 rounded-lg px-6">
                 <AccordionTrigger className="text-lg font-semibold text-info hover:no-underline">
                   <div className="flex items-center gap-3">
@@ -156,13 +157,8 @@ const MedicacoesAutoCusto = () => {
                     </div>
                   </div>
                 </AccordionContent>
-              </AccordionItem>
+              </
 
-            </Accordion>
-          </div>
-        </div>
-      </section>
-    </div>
 
 
 
