@@ -25,7 +25,7 @@ const Header = () => {
             <img 
               src={logoPereiro} 
               alt="Prefeitura Municipal de Pereiro" 
-              className="h-16 sm:h-24 w-auto drop-shadow-md"
+              className="h-1 sm:h-5 w-auto drop-shadow-md"
             />
           </div>
         </div>
