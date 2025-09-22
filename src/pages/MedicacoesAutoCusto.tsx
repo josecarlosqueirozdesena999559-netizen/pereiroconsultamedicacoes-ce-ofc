@@ -91,21 +91,19 @@ const MedicacoesAutoCusto = () => {
 
                         {/* ✅ Botão de download do PDF (atualizado) */}
                         <div className="mt-4 text-center">
-                          <a
-                            href="/mnt/data/laudo%20(1).pdf"
-                            download
-                            className="inline-flex items-center gap-2 px-4 py-2 bg-success text-white rounded-md hover:bg-success/90 transition-colors text-sm font-medium"
-                          >
-                            <FileText className="w-4 h-4" />
-                            Baixar Laudo (PDF)
-                          </a>
-                        </div>
+  <a
+    href="/docs/laudo.pdf"
+    download
+    className="inline-flex items-center gap-2 px-4 py-2 bg-success text-white rounded-md hover:bg-success/90 transition-colors text-sm font-medium"
+  >
+    <FileText className="w-4 h-4" />
+    Baixar Laudo (PDF)
+  </a>
+</div>
 
-                        {/* ✅ Texto solicitado abaixo do link */}
-                        <p className="text-sm text-muted-foreground text-center mt-3">
-                          Em posse dessa documentação ou para maiores esclarecimentos dirija-se a Central de Abastecimento Farmacêutico, situada a Rua Santos Dumont, 285, Centro.
-                        </p>
-                      </div>
+<p className="text-sm text-muted-foreground text-center mt-3">
+  Em posse dessa documentação ou para maiores esclarecimentos dirija-se a Central de Abastecimento Farmacêutico, situada a Rua Santos Dumont, 285, Centro.
+</p>
                     </AccordionContent>
                   </AccordionItem>
 
