@@ -43,9 +43,11 @@ const MedicacoesAutoCusto = () => {
                     <AccordionContent className="pt-4 pb-6">
                       <div className="space-y-4">
                         <p className="text-muted-foreground leading-relaxed">
-                         ✅ O que é a Farmácia de Alto Custo do SUS?
-                          Serviço do SUS que fornece gratuitamente medicamentos caros para doenças crônicas, raras ou graves. 
-                          A gestão é estadual, e não municipal.
+                         O Governo Federal, através do Sistema Único de Saúde (SUS), fornece medicamentos de alto custo para doenças graves, crônicas e raras,
+                          principalmente através do Componente Especializado da Assistência Farmacêutica (CEAF).
+                          Para ter acesso, é preciso ter o laudo médico (LME), a receita, os documentos pessoais e o cartão SUS, 
+                          e verificar se o medicamento está nos protocolos clínicos do Ministério da Saúde. 
+                          A solicitação é feita nas Secretarias de Saúde ou através do portal do Ministério da Saúde.
                         </p>
                         <div className="p-4 bg-primary/5 rounded-lg border border-primary/20">
                           <p className="text-sm font-medium text-primary">
