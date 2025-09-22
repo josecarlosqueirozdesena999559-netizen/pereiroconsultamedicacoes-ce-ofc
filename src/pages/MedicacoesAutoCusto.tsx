@@ -27,7 +27,7 @@ const MedicacoesAutoCusto = () => {
           {/* ✅ Botões de download centralizados */}
           <div className="flex flex-col sm:flex-row justify-center gap-4 mt-6">
             <a
-              href="/condicoes.pdf"
+              href="/condicoes-clinicas-contempladas-pelo-ceaf.pdf"
               download
               className="inline-flex items-center gap-2 px-6 py-3 bg-white text-primary font-semibold rounded-lg shadow hover:bg-gray-100 transition-colors"
             >
