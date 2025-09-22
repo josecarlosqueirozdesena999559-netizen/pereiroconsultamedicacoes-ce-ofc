@@ -1,4 +1,4 @@
-import { LogOut, Home, User, Settings } from 'lucide-react';
+import { LogOut, Home, User, Settings, Pill } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -53,6 +53,15 @@ const Header = () => {
                   Início
                 </Button>
               )}
+              
+              <Button
+                variant="ghost"
+                onClick={() => navigate('/medicacoes-auto-custo')}
+                className="text-primary-foreground hover:bg-white/10 text-sm"
+              >
+                <Pill className="h-4 w-4 mr-1 sm:mr-2" />
+                Medicações Auto Custo
+              </Button>
               
               {isAuthenticated && isHomePage && (
                 <Button
