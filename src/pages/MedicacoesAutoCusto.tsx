@@ -38,7 +38,7 @@ const MedicacoesAutoCusto = () => {
             <a
               href="/lista-de-medicamentos-disponibilizados-pelo-ceaf.pdf"
               download
-              className="inline-flex items-center gap-2 px-6 py-3 bg-success text-white font-semibold rounded-lg shadow hover:bg-success/90 transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-white text-primary font-semibold rounded-lg shadow hover:bg-gray-100 transition-colors"
             >
               <FileText className="w-5 h-5" />
               Elenco de medicamentos disponibilizados
