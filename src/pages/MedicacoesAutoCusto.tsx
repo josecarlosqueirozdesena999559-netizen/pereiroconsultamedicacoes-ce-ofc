@@ -19,8 +19,9 @@ const MedicacoesAutoCusto = () => {
             CAF - CENTRO DE ATENDIMENTO FARMACÊUTICO.
           </p>
           <p className="text-sm sm:text-lg opacity-85 max-w-4xl mx-auto leading-relaxed px-4">
-            Acesso facilitado a medicamentos essenciais com valores subsidiados pelo 
-            Governo Federal através do Centro de Atendimento Farmacêutico (CAF).
+            Acesso a medicamentos indicados para o tratamento de condições clínicas de maior complexidade,
+            tais como: doenças raras, doenças autoimunes, esclerose múltipla, artrite reumatoide,
+            doenças inflamatórias intestinais, psoríase em formas graves, pacientes transplantados, entre outras.
           </p>
         </div>
       </section>
