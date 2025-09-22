@@ -18,11 +18,32 @@ const MedicacoesAutoCusto = () => {
           <p className="text-lg sm:text-xl md:text-2xl opacity-95 mb-3 sm:mb-4 font-medium">
             CAF - CENTRO DE ATENDIMENTO FARMACÊUTICO.
           </p>
-          <p className="text-sm sm:text-lg opacity-85 max-w-4xl mx-auto leading-relaxed px-4">
+          <p className="text-sm sm:text-lg opacity-85 max-w-4xl mx-auto leading-relaxed px-4 mb-6">
             Acesso a medicamentos indicados para o tratamento de condições clínicas de maior complexidade,
             tais como: doenças raras, doenças autoimunes, esclerose múltipla, artrite reumatoide,
             doenças inflamatórias intestinais, psoríase em formas graves, pacientes transplantados, entre outras.
           </p>
+
+          {/* ✅ Botões de download centralizados */}
+          <div className="flex flex-col sm:flex-row justify-center gap-4 mt-6">
+            <a
+              href="/condicoes.pdf"
+              download
+              className="inline-flex items-center gap-2 px-6 py-3 bg-white text-primary font-semibold rounded-lg shadow hover:bg-gray-100 transition-colors"
+            >
+              <FileText className="w-5 h-5" />
+              Condições clínicas contempladas
+            </a>
+
+            <a
+              href="/elenco.pdf"
+              download
+              className="inline-flex items-center gap-2 px-6 py-3 bg-success text-white font-semibold rounded-lg shadow hover:bg-success/90 transition-colors"
+            >
+              <FileText className="w-5 h-5" />
+              Elenco de medicamentos disponibilizados
+            </a>
+          </div>
         </div>
       </section>
 
@@ -33,13 +54,11 @@ const MedicacoesAutoCusto = () => {
             <Card className="bg-white shadow-xl border-2 border-primary/10">
               <CardContent className="p-8">
 
-                {/* ✅ Accordion modificado para manter menus abertos */}
                 <Accordion
                   type="multiple"
                   defaultValue={['o-que-e', 'como-funciona', 'caf-info']}
                   className="w-full space-y-4"
                 >
-
                   <AccordionItem value="o-que-e" className="border border-primary/20 rounded-lg px-6">
                     <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
                       <div className="flex items-center gap-3">
@@ -74,7 +93,6 @@ const MedicacoesAutoCusto = () => {
                     </AccordionTrigger>
                     <AccordionContent className="pt-4 pb-6">
                       <div className="space-y-4">
-                        {/* 🔄 Texto principal de orientação */}
                         <div className="space-y-3">
                           <p className="text-muted-foreground leading-relaxed">
                             Após o atendimento médico e a prescrição de um medicamento pertencente ao elenco do CEAF (Elenco de medicamentos disponibilizados), o(a) usuário(a) deverá sair da consulta com os seguintes documentos devidamente preenchidos pelo profissional prescritor:
@@ -89,7 +107,6 @@ const MedicacoesAutoCusto = () => {
                           </ul>
                         </div>
 
-                        {/* ✅ Botão de download do PDF (arquivo na pasta /public/docs) */}
                         <div className="mt-4 text-center">
                           <a
                             href="laudo.pdf"
@@ -101,7 +118,6 @@ const MedicacoesAutoCusto = () => {
                           </a>
                         </div>
 
-                        {/* ✅ Texto solicitado abaixo do link */}
                         <p className="text-sm text-muted-foreground text-center mt-3">
                           Em posse dessa documentação ou para maiores esclarecimentos dirija-se a Central de Abastecimento Farmacêutico, situada a Rua Santos Dumont, 285, Centro.
                         </p>
