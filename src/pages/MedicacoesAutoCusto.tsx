@@ -1,13 +1,13 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Pill, Phone, MapPin as LocationIcon, Clock, FileText, Users, CheckCircle } from 'lucide-react';
+import { Pill, Phone, MapPin as LocationIcon, Clock, FileText, Users } from 'lucide-react';
 import Header from '@/components/Header';
 
 const MedicacoesAutoCusto = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-secondary/20">
       <Header />
-      
+
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-primary via-[hsl(120_75%_25%)] to-primary text-primary-foreground py-16 sm:py-20">
         <div className="container mx-auto px-4 text-center">
@@ -32,8 +32,14 @@ const MedicacoesAutoCusto = () => {
           <div className="max-w-4xl mx-auto">
             <Card className="bg-white shadow-xl border-2 border-primary/10">
               <CardContent className="p-8">
-                <Accordion type="single" collapsible className="w-full space-y-4">
-                  
+
+                {/* ✅ Accordion modificado para manter menus abertos */}
+                <Accordion
+                  type="multiple"
+                  defaultValue={['o-que-e', 'como-funciona', 'caf-info']}
+                  className="w-full space-y-4"
+                >
+
                   <AccordionItem value="o-que-e" className="border border-primary/20 rounded-lg px-6">
                     <AccordionTrigger className="text-lg font-semibold text-primary hover:no-underline">
                       <div className="flex items-center gap-3">
@@ -44,10 +50,10 @@ const MedicacoesAutoCusto = () => {
                     <AccordionContent className="pt-4 pb-6">
                       <div className="space-y-4">
                         <p className="text-muted-foreground leading-relaxed">
-                         O Governo Federal, através do Sistema Único de Saúde (SUS), fornece medicamentos de alto custo para doenças graves, crônicas e raras,
+                          O Governo Federal, através do Sistema Único de Saúde (SUS), fornece medicamentos de alto custo para doenças graves, crônicas e raras,
                           principalmente através do Componente Especializado da Assistência Farmacêutica (CEAF).
-                          Para ter acesso, é preciso ter o laudo médico (LME), a receita, os documentos pessoais e o cartão SUS, 
-                          e verificar se o medicamento está nos protocolos clínicos do Ministério da Saúde. 
+                          Para ter acesso, é preciso ter o laudo médico (LME), a receita, os documentos pessoais e o cartão SUS,
+                          e verificar se o medicamento está nos protocolos clínicos do Ministério da Saúde.
                           A solicitação é feita nas Secretarias de Saúde ou através do portal do Ministério da Saúde.
                         </p>
                         <div className="p-4 bg-primary/5 rounded-lg border border-primary/20">
@@ -106,7 +112,7 @@ const MedicacoesAutoCusto = () => {
                             </div>
                           </div>
                         </div>
-                        
+
                         <div className="mt-6 p-4 bg-success/5 rounded-lg border border-success/20">
                           <h4 className="font-semibold text-success mb-2">Documentos Necessários:</h4>
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
@@ -123,10 +129,22 @@ const MedicacoesAutoCusto = () => {
                               <ul className="text-muted-foreground space-y-1">
                                 <li>• Receita médica válida</li>
                                 <li>• Documento com foto</li>
-                                <li>• Laudo</href="file:///C:/Users/KENEDI/Downloads/laudo.pdfli>"
+                                <li>• Laudo</li>
                               </ul>
                             </div>
                           </div>
+                        </div>
+
+                        {/* ✅ Botão de download do PDF */}
+                        <div className="mt-4 text-center">
+                          <a
+                            href="/docs/laudo.pdf"
+                            download
+                            className="inline-flex items-center gap-2 px-4 py-2 bg-success text-white rounded-md hover:bg-success/90 transition-colors text-sm font-medium"
+                          >
+                            <FileText className="w-4 h-4" />
+                            Baixar Laudo (PDF)
+                          </a>
                         </div>
                       </div>
                     </AccordionContent>
@@ -143,7 +161,6 @@ const MedicacoesAutoCusto = () => {
                       <div className="space-y-6">
                         <div>
                           <h4 className="font-semibold text-info mb-4">Centro de Atendimento Farmacêutico - CAF</h4>
-                          
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="space-y-4">
                               <div className="flex items-start gap-3">
@@ -176,11 +193,11 @@ const MedicacoesAutoCusto = () => {
                             </div>
                           </div>
                         </div>
-                        
+
                         <div className="p-4 bg-info/5 rounded-lg border border-info/20">
                           <h4 className="font-semibold text-info mb-2">Informação Importante</h4>
                           <p className="text-sm text-muted-foreground">
-                            O programa é destinado a famílias de baixa renda cadastradas no CadÚnico. 
+                            O programa é destinado a famílias de baixa renda cadastradas no CadÚnico.
                             Consulte a lista de medicamentos disponíveis no CAF para verificar a cobertura do seu tratamento.
                           </p>
                         </div>
