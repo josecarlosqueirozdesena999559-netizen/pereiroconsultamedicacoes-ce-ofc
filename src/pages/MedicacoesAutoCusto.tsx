@@ -123,6 +123,7 @@ const MedicacoesAutoCusto = () => {
                               <ul className="text-muted-foreground space-y-1">
                                 <li>• Receita médica válida</li>
                                 <li>• Documento com foto</li>
+                                <li>• Laudo</href="file:///C:/Users/KENEDI/Downloads/laudo.pdfli>"
                               </ul>
                             </div>
                           </div>
