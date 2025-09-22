@@ -123,11 +123,24 @@ const MedicacoesAutoCusto = () => {
                               <ul className="text-muted-foreground space-y-1">
                                 <li>• Receita médica válida</li>
                                 <li>• Documento com foto</li>
-                                <li>• Laudo</href="file:///C:/Users/KENEDI/Downloads/laudo.pdfli>"
+                                <li>• Laudo</li>
                               </ul>
                             </div>
                           </div>
                         </div>
+
+                        {/* Botão para download do PDF */}
+                        <div className="mt-4 text-center">
+                          <a
+                            href="/docs/laudo.pdf"
+                            download
+                            className="inline-flex items-center gap-2 px-4 py-2 bg-success text-white rounded-md hover:bg-success/90 transition-colors text-sm font-medium"
+                          >
+                            <FileText className="w-4 h-4" />
+                            Baixar Laudo (PDF)
+                          </a>
+                        </div>
+
                       </div>
                     </AccordionContent>
                   </AccordionItem>
