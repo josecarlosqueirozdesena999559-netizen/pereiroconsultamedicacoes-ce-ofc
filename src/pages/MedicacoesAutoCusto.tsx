@@ -92,7 +92,7 @@ const MedicacoesAutoCusto = () => {
                         {/* ✅ Botão de download do PDF (arquivo na pasta /public/docs) */}
                         <div className="mt-4 text-center">
                           <a
-                            href="/public/laudo.pdf"
+                            href="laudo.pdf"
                             download
                             className="inline-flex items-center gap-2 px-4 py-2 bg-success text-white rounded-md hover:bg-success/90 transition-colors text-sm font-medium"
                           >
