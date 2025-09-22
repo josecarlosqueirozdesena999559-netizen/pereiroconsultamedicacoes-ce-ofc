@@ -36,7 +36,7 @@ const MedicacoesAutoCusto = () => {
             </a>
 
             <a
-              href="/elenco.pdf"
+              href="/lista-de-medicamentos-disponibilizados-pelo-ceaf.pdf"
               download
               className="inline-flex items-center gap-2 px-6 py-3 bg-success text-white font-semibold rounded-lg shadow hover:bg-success/90 transition-colors"
             >
