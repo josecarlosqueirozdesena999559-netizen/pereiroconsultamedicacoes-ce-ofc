@@ -92,28 +92,28 @@ const PWAInstallPrompt: React.FC = () => {
           icon: <Share className="h-4 w-4 text-primary" />,
           title: "📱 Adicionar à Tela Inicial",
           instruction: "Toque em 'Compartilhar' e depois 'Adicionar à Tela Inicial'",
-          buttonText: "Entendi"
+          buttonText: "Instalar"
         };
       case 'android':
         return {
           icon: <Plus className="h-4 w-4 text-primary" />,
           title: "📱 Instalar App",
           instruction: "Use o menu do navegador ou o botão de instalação",
-          buttonText: deferredPrompt ? "Instalar" : "Entendi"
+          buttonText: "Instalar"
         };
       case 'desktop':
         return {
           icon: <Download className="h-4 w-4 text-primary" />,
           title: "💻 Instalar App",
           instruction: "Clique no ícone de instalação na barra de endereços",
-          buttonText: deferredPrompt ? "Instalar" : "Entendi"
+          buttonText: "Instalar"
         };
       default:
         return {
           icon: <Smartphone className="h-4 w-4 text-primary" />,
           title: "📱 Acesso Rápido",
           instruction: "Adicione este site aos favoritos para acesso rápido",
-          buttonText: "Entendi"
+          buttonText: "Instalar"
         };
     }
   };
