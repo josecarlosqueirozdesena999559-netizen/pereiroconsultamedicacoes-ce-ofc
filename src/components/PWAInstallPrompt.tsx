@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Download, X, Smartphone } from 'lucide-react';
+import { Download, X, Smartphone, Share, Plus } from 'lucide-react';
 
 interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
@@ -11,27 +11,52 @@ interface BeforeInstallPromptEvent extends Event {
 const PWAInstallPrompt: React.FC = () => {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [showPrompt, setShowPrompt] = useState(false);
+  const [deviceType, setDeviceType] = useState<'android' | 'ios' | 'desktop' | 'other'>('other');
 
   useEffect(() => {
+    // Detectar tipo de dispositivo
+    const userAgent = navigator.userAgent.toLowerCase();
+    const isIOS = /iphone|ipad|ipod/.test(userAgent);
+    const isAndroid = /android/.test(userAgent);
+    const isDesktop = !(/mobi|android/i.test(userAgent));
+
+    if (isIOS) {
+      setDeviceType('ios');
+    } else if (isAndroid) {
+      setDeviceType('android');
+    } else if (isDesktop) {
+      setDeviceType('desktop');
+    } else {
+      setDeviceType('other');
+    }
+
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
-      
-      // Verificar se o usuário não rejeitou antes
-      const isRejected = localStorage.getItem('pwa-install-rejected');
-      const lastRejectedTime = localStorage.getItem('pwa-install-rejected-time');
-      
-      // Mostrar novamente após 24 horas se foi rejeitado
-      const shouldShowAfter24h = lastRejectedTime && 
-        (Date.now() - parseInt(lastRejectedTime)) > 24 * 60 * 60 * 1000;
-      
-      if (!isRejected || shouldShowAfter24h) {
-        // Mostrar com delay para não interferir no carregamento
-        setTimeout(() => setShowPrompt(true), 3000);
-      }
     };
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+    // Verificar se deve mostrar o prompt
+    const checkShouldShow = () => {
+      const isRejected = localStorage.getItem('pwa-install-rejected');
+      const lastRejectedTime = localStorage.getItem('pwa-install-rejected-time');
+      const isInstalled = window.matchMedia('(display-mode: standalone)').matches;
+      
+      // Não mostrar se já está instalado
+      if (isInstalled) return;
+      
+      // Mostrar novamente após 7 dias se foi rejeitado
+      const shouldShowAfter7Days = lastRejectedTime && 
+        (Date.now() - parseInt(lastRejectedTime)) > 7 * 24 * 60 * 60 * 1000;
+      
+      if (!isRejected || shouldShowAfter7Days) {
+        // Mostrar com delay para não interferir no carregamento
+        setTimeout(() => setShowPrompt(true), 5000);
+      }
+    };
+
+    checkShouldShow();
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
@@ -60,34 +85,72 @@ const PWAInstallPrompt: React.FC = () => {
     localStorage.setItem('pwa-install-rejected-time', Date.now().toString());
   };
 
-  if (!showPrompt || !deferredPrompt) {
+  const getInstallInstructions = () => {
+    switch (deviceType) {
+      case 'ios':
+        return {
+          icon: <Share className="h-4 w-4 text-primary" />,
+          title: "📱 Adicionar à Tela Inicial",
+          instruction: "Toque em 'Compartilhar' e depois 'Adicionar à Tela Inicial'",
+          buttonText: "Entendi"
+        };
+      case 'android':
+        return {
+          icon: <Plus className="h-4 w-4 text-primary" />,
+          title: "📱 Instalar App",
+          instruction: "Use o menu do navegador ou o botão de instalação",
+          buttonText: deferredPrompt ? "Instalar" : "Entendi"
+        };
+      case 'desktop':
+        return {
+          icon: <Download className="h-4 w-4 text-primary" />,
+          title: "💻 Instalar App",
+          instruction: "Clique no ícone de instalação na barra de endereços",
+          buttonText: deferredPrompt ? "Instalar" : "Entendi"
+        };
+      default:
+        return {
+          icon: <Smartphone className="h-4 w-4 text-primary" />,
+          title: "📱 Acesso Rápido",
+          instruction: "Adicione este site aos favoritos para acesso rápido",
+          buttonText: "Entendi"
+        };
+    }
+  };
+
+  // Sempre mostrar o prompt se passou o tempo necessário, independente do navegador
+  if (!showPrompt) {
     return null;
   }
+
+  const instructions = getInstallInstructions();
 
   return (
     <div className="fixed bottom-4 left-4 right-4 z-50 animate-in slide-in-from-bottom-4">
       <Card className="p-3 shadow-lg border border-primary/20 bg-card/95 backdrop-blur-sm max-w-sm mx-auto">
         <div className="flex items-start gap-3">
           <div className="p-2 rounded-full bg-primary/10 flex-shrink-0">
-            <Smartphone className="h-4 w-4 text-primary" />
+            {instructions.icon}
           </div>
           
           <div className="flex-1 min-w-0">
             <h3 className="font-semibold text-sm text-foreground">
-              📱 Instalar App
+              {instructions.title}
             </h3>
             <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
-              Acesse rapidamente as informações mesmo offline
+              {instructions.instruction}
             </p>
             
             <div className="flex gap-2 mt-3">
               <Button
-                onClick={handleInstall}
+                onClick={deferredPrompt ? handleInstall : handleDismiss}
                 size="sm"
                 className="text-xs h-8 px-3 bg-primary hover:bg-primary/90"
               >
-                <Download className="h-3 w-3 mr-1" />
-                Instalar
+                {deferredPrompt && deviceType !== 'ios' && (
+                  <Download className="h-3 w-3 mr-1" />
+                )}
+                {instructions.buttonText}
               </Button>
               <Button
                 onClick={handleDismiss}
