@@ -137,3 +137,32 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
 }
+
+/* PWA Install Prompt Animations */
+@keyframes slide-in-from-bottom {
+  0% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.animate-in {
+  animation: fade-in 0.3s ease-out;
+}
+
+.slide-in-from-bottom-4 {
+  animation: slide-in-from-bottom 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}

@@ -1,13 +1,24 @@
 <!doctype html>
-<html lang="en">
+<html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>sistemaconsultademedicacoes</title>
+    <title>Sistema UBS Pereiro - Consulta de Medicações</title>
     <link rel="icon" href="/src/assets/logo-pereiro.png" type="image/png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#0f2e0f">
     <meta name="description" content="Sistema de consulta de medicamentos disponíveis nas UBS de Pereiro - Prefeitura Municipal" />
     <meta name="author" content="Prefeitura Municipal de Pereiro" />
     <meta name="keywords" content="UBS, medicamentos, Pereiro, saúde pública, medicações" />
+
+    <!-- PWA Meta Tags -->
+    <meta name="application-name" content="UBS Pereiro">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="UBS Pereiro">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="msapplication-TileColor" content="#0f2e0f">
+    <meta name="msapplication-tap-highlight" content="no">
 
     <meta property="og:title" content="Sistema UBS Pereiro - Consulta de Medicações" />
     <meta property="og:description" content="Consulte os medicamentos disponíveis nas Unidades Básicas de Saúde de Pereiro" />
@@ -18,5 +29,18 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then((registration) => {
+              console.log('SW registered: ', registration);
+            })
+            .catch((registrationError) => {
+              console.log('SW registration failed: ', registrationError);
+            });
+        });
+      }
+    </script>
   </body>
 </html>

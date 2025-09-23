@@ -1,0 +1,220 @@
+CONFIGURAÇÃO COMPLETA DO SISTEMA UBS PEREIRO - BANCO DE DADOS SUPABASE
+==========================================================================
+
+Este documento contém todas as configurações necessárias para replicar o sistema em outro banco de dados Supabase.
+
+1. CRIAÇÃO DAS TABELAS
+======================
+
+-- Enum para tipos de usuário
+CREATE TYPE public.user_role AS ENUM ('admin', 'responsavel');
+
+-- Tabela de usuários
+CREATE TABLE public.usuarios (
+    id UUID NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
+    email TEXT NOT NULL UNIQUE,
+    senha TEXT NOT NULL,
+    nome TEXT NOT NULL,
+    tipo user_role NOT NULL DEFAULT 'responsavel',
+    criado_em TIMESTAMP WITHOUT TIME ZONE DEFAULT now()
+);
+
+-- Tabela de postos/UBS
+CREATE TABLE public.postos (
+    id UUID NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
+    nome TEXT NOT NULL,
+    localidade TEXT NOT NULL,
+    horario_funcionamento TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'fechado',
+    responsavel_id UUID,
+    atualizado_em TIMESTAMP WITHOUT TIME ZONE DEFAULT now()
+);
+
+-- Tabela de relacionamento usuário-posto (muitos para muitos)
+CREATE TABLE public.usuario_posto (
+    user_id UUID NOT NULL,
+    posto_id UUID NOT NULL,
+    PRIMARY KEY (user_id, posto_id)
+);
+
+-- Tabela de arquivos PDF
+CREATE TABLE public.arquivos_pdf (
+    id UUID NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
+    url TEXT NOT NULL,
+    posto_id UUID,
+    data_upload TIMESTAMP WITHOUT TIME ZONE DEFAULT now()
+);
+
+2. FUNÇÕES DO BANCO DE DADOS
+============================
+
+-- Função de login
+CREATE OR REPLACE FUNCTION public.fn_login(p_email text, p_senha text)
+RETURNS TABLE(id uuid, email text, nome text, tipo text)
+LANGUAGE plpgsql
+STABLE SECURITY DEFINER
+SET search_path TO 'public'
+AS $function$
+BEGIN
+  RETURN QUERY
+  SELECT usuarios.id, usuarios.email, usuarios.nome, usuarios.tipo::text
+  FROM public.usuarios
+  WHERE usuarios.email = p_email
+    AND usuarios.senha = crypt(p_senha, usuarios.senha);
+END;
+$function$;
+
+-- Função para atualizar updated_at automaticamente
+CREATE OR REPLACE FUNCTION public.handle_updated_at()
+RETURNS trigger
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = 'public'
+AS $function$
+BEGIN
+  NEW.updated_at = now();
+  RETURN NEW;
+END;
+$function$;
+
+-- Trigger para atualizar automaticamente o campo atualizado_em
+CREATE TRIGGER update_postos_updated_at
+    BEFORE UPDATE ON public.postos
+    FOR EACH ROW
+    EXECUTE FUNCTION public.handle_updated_at();
+
+3. POLÍTICAS RLS (ROW LEVEL SECURITY)
+=====================================
+
+-- Habilitar RLS em todas as tabelas
+ALTER TABLE public.usuarios ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.postos ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.usuario_posto ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.arquivos_pdf ENABLE ROW LEVEL SECURITY;
+
+-- Políticas para tabela usuarios
+CREATE POLICY "Usuarios: Permitir todas operações"
+ON public.usuarios
+FOR ALL
+USING (true)
+WITH CHECK (true);
+
+-- Políticas para tabela postos
+CREATE POLICY "Postos: Permitir todas operações"
+ON public.postos
+FOR ALL
+USING (true)
+WITH CHECK (true);
+
+-- Políticas para tabela usuario_posto
+CREATE POLICY "Usuario_posto: Permitir todas operações"
+ON public.usuario_posto
+FOR ALL
+USING (true)
+WITH CHECK (true);
+
+-- Políticas para tabela arquivos_pdf
+CREATE POLICY "Arquivos_pdf: Permitir todas operações"
+ON public.arquivos_pdf
+FOR ALL
+USING (true)
+WITH CHECK (true);
+
+4. CONFIGURAÇÃO DO STORAGE (BUCKET)
+===================================
+
+-- Criar bucket para medicações
+INSERT INTO storage.buckets (id, name, public) 
+VALUES ('medicacoes_ubs', 'medicacoes_ubs', true);
+
+-- Políticas do Storage
+CREATE POLICY "Permitir visualização pública dos arquivos"
+ON storage.objects
+FOR SELECT
+USING (bucket_id = 'medicacoes_ubs');
+
+CREATE POLICY "Permitir upload de arquivos"
+ON storage.objects
+FOR INSERT
+WITH CHECK (bucket_id = 'medicacoes_ubs');
+
+CREATE POLICY "Permitir atualização de arquivos"
+ON storage.objects
+FOR UPDATE
+USING (bucket_id = 'medicacoes_ubs');
+
+CREATE POLICY "Permitir exclusão de arquivos"
+ON storage.objects
+FOR DELETE
+USING (bucket_id = 'medicacoes_ubs');
+
+5. DADOS INICIAIS (OPCIONAL)
+============================
+
+-- Inserir usuário administrador padrão
+INSERT INTO public.usuarios (email, senha, nome, tipo) 
+VALUES (
+    'admin@pereiro.ce.gov.br', 
+    crypt('admin123', gen_salt('bf')), 
+    'Administrador do Sistema', 
+    'admin'
+);
+
+-- Inserir alguns postos de exemplo
+INSERT INTO public.postos (nome, localidade, horario_funcionamento, status) VALUES
+('UBS Centro', 'Centro', '07:00 - 17:00', 'aberto'),
+('UBS São José', 'São José', '07:00 - 17:00', 'fechado'),
+('UBS Vila Nova', 'Vila Nova', '07:00 - 17:00', 'aberto');
+
+6. CONFIGURAÇÕES ADICIONAIS
+===========================
+
+-- Habilitar extensão para criptografia de senhas
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
+-- Configurar timezone (opcional)
+SET timezone = 'America/Fortaleza';
+
+7. VERIFICAÇÕES DE SEGURANÇA
+============================
+
+-- Verificar se RLS está habilitado em todas as tabelas
+SELECT schemaname, tablename, rowsecurity 
+FROM pg_tables 
+WHERE schemaname = 'public' AND rowsecurity = true;
+
+-- Verificar políticas criadas
+SELECT schemaname, tablename, policyname, permissive, roles, cmd, qual, with_check
+FROM pg_policies 
+WHERE schemaname = 'public';
+
+8. OBSERVAÇÕES IMPORTANTES
+=========================
+
+1. Altere as senhas padrão antes de usar em produção
+2. Configure as variáveis de ambiente no seu projeto:
+   - SUPABASE_URL: sua URL do Supabase
+   - SUPABASE_ANON_KEY: sua chave anônima do Supabase
+3. As políticas RLS estão configuradas como permissivas (true) para simplicidade
+4. Em produção, considere implementar políticas mais restritivas baseadas em autenticação
+5. O bucket de storage está configurado como público para facilitar o acesso aos PDFs
+6. Teste todas as funcionalidades após a configuração
+
+9. COMANDOS DE VERIFICAÇÃO
+=========================
+
+-- Verificar se as tabelas foram criadas
+SELECT table_name FROM information_schema.tables WHERE table_schema = 'public';
+
+-- Verificar se as funções foram criadas
+SELECT routine_name FROM information_schema.routines WHERE routine_schema = 'public';
+
+-- Verificar se o bucket foi criado
+SELECT * FROM storage.buckets WHERE name = 'medicacoes_ubs';
+
+-- Testar função de login (substitua pelos dados reais)
+SELECT * FROM public.fn_login('admin@pereiro.ce.gov.br', 'admin123');
+
+==========================================================================
+FIM DA CONFIGURAÇÃO - SISTEMA UBS PEREIRO
+=========================================================================="
