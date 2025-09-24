@@ -9,6 +9,7 @@ interface BeforeInstallPromptEvent extends Event {
 }
 
 const PWAInstallPrompt: React.FC = () => {
+  console.log('PWAInstallPrompt component rendering...');
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [showPrompt, setShowPrompt] = useState(false);
   const [deviceType, setDeviceType] = useState<'android' | 'ios' | 'desktop' | 'other'>('other');
