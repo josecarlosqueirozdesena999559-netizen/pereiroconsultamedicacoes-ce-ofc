@@ -10,13 +10,11 @@ import { UBS } from '@/types';
 import { getUBS, initializeStorage } from '@/lib/storage';
 
 const Index = () => {
-  console.log('Index component rendering...');
   const [ubsList, setUbsList] = useState<UBS[]>([]);
   const [filteredUBS, setFilteredUBS] = useState<UBS[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    console.log('Index useEffect - initializing...');
     initializeStorage();
     loadUBS();
   }, []);
@@ -27,9 +25,7 @@ const Index = () => {
 
   const loadUBS = async () => {
     try {
-      console.log('Loading UBS data...');
       const data = await getUBS();
-      console.log('UBS data loaded:', data.length, 'items');
       setUbsList(data);
     } catch (error) {
       console.error('Erro ao carregar UBS:', error);
