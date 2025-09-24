@@ -142,18 +142,16 @@ const PWAInstallPrompt: React.FC = () => {
             </p>
             
             <div className="flex gap-2 mt-3">
-              {deviceType !== 'ios' && (
-                <Button
-                  onClick={deferredPrompt ? handleInstall : handleDismiss}
-                  size="sm"
-                  className="text-xs h-8 px-3 bg-primary hover:bg-primary/90"
-                >
-                  {deferredPrompt && (
-                    <Download className="h-3 w-3 mr-1" />
-                  )}
-                  {instructions.buttonText}
-                </Button>
-              )}
+              <Button
+                onClick={deferredPrompt ? handleInstall : handleDismiss}
+                size="sm"
+                className="text-xs h-8 px-3 bg-primary hover:bg-primary/90"
+              >
+                {deferredPrompt && deviceType !== 'ios' && (
+                  <Download className="h-3 w-3 mr-1" />
+                )}
+                {instructions.buttonText}
+              </Button>
               <Button
                 onClick={handleDismiss}
                 variant="ghost"
