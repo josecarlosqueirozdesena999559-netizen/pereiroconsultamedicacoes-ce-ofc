@@ -215,78 +215,126 @@ SELECT * FROM storage.buckets WHERE name = 'medicacoes_ubs';
 -- Testar função de login (substitua pelos dados reais)
 SELECT * FROM public.fn_login('admin@pereiro.ce.gov.br', 'admin123');
 
-10. COMO MIGRAR PARA OUTRO PROJETO SUPABASE
-===========================================
+10. COMO MIGRAR PARA OUTRO PROJETO SUPABASE - PASSO A PASSO VISUAL
+===============================================================================
 
 Para conectar este sistema a outro projeto Supabase, siga estes passos:
 
-A. PREPARAÇÃO DO NOVO PROJETO SUPABASE
----------------------------------------
-1. Acesse https://supabase.com e crie um novo projeto
-2. Anote as seguintes informações do novo projeto:
-   - Project URL (formato: https://[seu-project-id].supabase.co)
-   - Project ID (parte antes de .supabase.co)
-   - Anon Key (chave pública)
-   - Service Role Key (chave privada - mantenha segura)
+A. CRIANDO UM NOVO PROJETO SUPABASE
+-----------------------------------
+1. Acesse https://supabase.com
+2. Clique em "New project" ou "Start your project"
+3. Escolha sua organização
+4. Preencha:
+   - Name: "UBS Pereiro" (ou nome de sua escolha)
+   - Database Password: crie uma senha forte (anote ela!)
+   - Region: South America (São Paulo) - mais próximo do Brasil
+5. Clique em "Create new project"
+6. Aguarde alguns minutos para o projeto ser criado
 
-B. CONFIGURAÇÃO DO NOVO BANCO DE DADOS
----------------------------------------
-1. No painel do Supabase, vá em "SQL Editor"
-2. Execute TODOS os comandos SQL deste documento na seguinte ordem:
-   - Seção 1: Criação das tabelas
-   - Seção 2: Funções do banco de dados
-   - Seção 3: Políticas RLS
-   - Seção 4: Configuração do Storage
-   - Seção 5: Dados iniciais (opcional)
-   - Seção 6: Configurações adicionais
+B. ONDE ENCONTRAR AS CHAVES DO SUPABASE
+----------------------------------------
+Após o projeto ser criado:
 
-C. ALTERAÇÃO DAS CONFIGURAÇÕES NO PROJETO
-------------------------------------------
-1. Altere o arquivo .env:
-   VITE_SUPABASE_PROJECT_ID="[novo-project-id]"
-   VITE_SUPABASE_PUBLISHABLE_KEY="[nova-anon-key]"
-   VITE_SUPABASE_URL="https://[novo-project-id].supabase.co"
+1. CHAVES DE API (Project API keys):
+   - No painel lateral esquerdo, vá em "Settings" (Configurações) 
+   - Clique em "API"
+   - Você verá duas chaves importantes:
+     
+     📋 anon / public key (CHAVE PÚBLICA):
+     [texto longo começando com "eyJhbGciOiJIUzI1NiIs..."]
+     
+     🔒 service_role key (CHAVE PRIVADA - CUIDADO!):
+     [texto longo começando com "eyJhbGciOiJIUzI1NiIs..."]
 
-2. Altere o arquivo supabase/config.toml:
-   project_id = "[novo-project-id]"
+2. PROJECT URL:
+   - Na mesma tela "Settings > API"
+   - Procure por "Project URL"
+   - Exemplo: https://xyzabc123.supabase.co
 
-3. Altere o arquivo src/integrations/supabase/client.ts:
-   const SUPABASE_URL = "https://[novo-project-id].supabase.co";
-   const SUPABASE_PUBLISHABLE_KEY = "[nova-anon-key]";
+3. PROJECT ID:
+   - É a parte antes de ".supabase.co" na URL
+   - Exemplo: se a URL é https://xyzabc123.supabase.co
+   - Então o ID é: xyzabc123
 
-D. MIGRAÇÃO DOS DADOS (SE NECESSÁRIO)
--------------------------------------
-1. Para migrar dados existentes:
-   - Exporte os dados do projeto antigo usando pg_dump ou interface do Supabase
-   - Importe os dados no novo projeto
+C. EXECUTANDO OS SCRIPTS SQL NO SUPABASE
+----------------------------------------
+1. No painel lateral esquerdo do Supabase, clique em "SQL Editor"
+2. Clique no botão "New query" para criar uma nova consulta
+3. Cole TODO o código SQL das seções 1-6 deste documento:
    
-2. Para migrar arquivos do Storage:
-   - Baixe todos os arquivos do bucket 'medicacoes_ubs' do projeto antigo
-   - Faça upload no novo bucket usando a interface ou API
+   📝 COPIE E COLE EXATAMENTE ASSIM:
+   - Primeiro: Seção 1 (Criação das tabelas) - Cole e clique "Run"
+   - Segundo: Seção 2 (Funções) - Cole e clique "Run" 
+   - Terceiro: Seção 3 (Políticas RLS) - Cole e clique "Run"
+   - Quarto: Seção 4 (Storage) - Cole e clique "Run"
+   - Quinto: Seção 5 (Dados iniciais) - Cole e clique "Run"
+   - Sexto: Seção 6 (Configurações) - Cole e clique "Run"
 
-E. TESTE DA NOVA CONFIGURAÇÃO
------------------------------
-1. Reinicie o servidor de desenvolvimento
-2. Teste o login com: admin@pereiro.ce.gov.br / admin123
-3. Teste as funcionalidades principais:
-   - Login de usuários
-   - Listagem de UBS/Postos
-   - Upload de PDFs
-   - Visualização de medicações
+4. Se houver erros, leia a mensagem e tente novamente
+5. Para verificar se deu certo, execute: 
+   SELECT table_name FROM information_schema.tables WHERE table_schema = 'public';
 
-F. CONFIGURAÇÕES DE PRODUÇÃO
------------------------------
-1. Configure as variáveis de ambiente no seu provedor de hospedagem
-2. Atualize as configurações de CORS no Supabase se necessário
-3. Configure o domínio personalizado (opcional)
-4. Ative 2FA para maior segurança no painel do Supabase
+D. VERIFICANDO O STORAGE (BUCKET)
+---------------------------------
+1. No painel lateral, clique em "Storage"
+2. Você deve ver o bucket "medicacoes_ubs" criado
+3. Se não aparecer, volte no SQL Editor e execute novamente a Seção 4
 
-G. TROUBLESHOOTING COMUM
--------------------------
-- Erro de conexão: Verifique se as URLs e chaves estão corretas
-- Tabelas não encontradas: Execute novamente os scripts SQL da seção 1
-- Políticas RLS bloqueando: Verifique se as políticas foram criadas corretamente
-- Storage não funcionando: Verifique se o bucket foi criado e as políticas aplicadas
+E. ALTERANDO AS CONFIGURAÇÕES NO SEU PROJETO
+--------------------------------------------
+Agora você precisa alterar 3 arquivos no seu código:
+
+1. 📄 Arquivo .env (na raiz do projeto):
+   Substitua pelos novos valores:
+   VITE_SUPABASE_PROJECT_ID="[seu-novo-project-id]"
+   VITE_SUPABASE_PUBLISHABLE_KEY="[sua-nova-anon-key]"
+   VITE_SUPABASE_URL="https://[seu-novo-project-id].supabase.co"
+
+2. 📄 Arquivo supabase/config.toml:
+   Substitua:
+   project_id = "[seu-novo-project-id]"
+
+3. 📄 Arquivo src/integrations/supabase/client.ts:
+   Substitua:
+   const SUPABASE_URL = "https://[seu-novo-project-id].supabase.co";
+   const SUPABASE_PUBLISHABLE_KEY = "[sua-nova-anon-key]";
+
+⚠️ IMPORTANTE: 
+- [seu-novo-project-id] = pegue da URL do seu projeto
+- [sua-nova-anon-key] = pegue da página Settings > API (anon key)
+
+F. TESTANDO SE FUNCIONOU
+-----------------------
+1. Reinicie seu servidor local (Ctrl+C e npm run dev novamente)
+2. Tente fazer login com:
+   📧 Email: admin@pereiro.ce.gov.br
+   🔒 Senha: admin123
+3. Se conseguir entrar, tudo funcionou!
+
+G. ONDE VER OS DADOS NO SUPABASE
+---------------------------------
+1. Clique em "Table Editor" no painel lateral
+2. Você verá as tabelas: usuarios, postos, usuario_posto, arquivos_pdf
+3. Clique em cada uma para ver os dados
+4. Para ver logs de erro, vá em "Logs" no painel lateral
+
+H. PROBLEMAS COMUNS E SOLUÇÕES
+------------------------------
+❌ "Failed to fetch" ou erro de conexão:
+   ✅ Verifique se as URLs e chaves estão corretas nos 3 arquivos
+
+❌ "relation does not exist":
+   ✅ Execute novamente os scripts SQL da Seção 1
+
+❌ Login não funciona:
+   ✅ Verifique se executou a Seção 2 (funções) e Seção 5 (dados iniciais)
+
+❌ Upload de PDF não funciona:
+   ✅ Verifique se o bucket foi criado (Storage) e execute a Seção 4
+
+❌ "Row Level Security policy violation":
+   ✅ Execute novamente a Seção 3 (Políticas RLS)
 
 IMPORTANTE:
 - Sempre teste em ambiente de desenvolvimento antes de alterar produção
@@ -296,4 +344,32 @@ IMPORTANTE:
 
 ==========================================================================
 FIM DA CONFIGURAÇÃO - SISTEMA UBS PEREIRO
+==========================================================================
+
+📋 RESUMO RÁPIDO - ONDE ENCONTRAR CADA COISA NO SUPABASE:
+
+🔧 CONFIGURAÇÕES E CHAVES:
+   Settings > API = Ver chaves (anon key, service role key, project URL)
+
+💾 EXECUTAR CÓDIGOS SQL:
+   SQL Editor > New Query = Cole os códigos SQL deste documento
+
+📊 VER DADOS:
+   Table Editor = Ver tabelas e dados (usuarios, postos, etc)
+
+📁 VER ARQUIVOS:
+   Storage > medicacoes_ubs = Ver PDFs enviados
+
+👥 VER USUÁRIOS (se usar auth):
+   Authentication > Users = Ver usuários cadastrados
+
+📈 VER LOGS E ERROS:
+   Logs = Ver erros do sistema
+
+🌐 CONFIGURAR DOMÍNIO:
+   Settings > General = Configurar URL personalizada
+
+🔒 POLÍTICAS DE SEGURANÇA:
+   Authentication > Policies = Ver políticas RLS
+
 ==========================================================================
