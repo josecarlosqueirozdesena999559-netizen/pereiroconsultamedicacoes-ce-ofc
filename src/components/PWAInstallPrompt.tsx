@@ -51,8 +51,8 @@ const PWAInstallPrompt: React.FC = () => {
         (Date.now() - parseInt(lastRejectedTime)) > 7 * 24 * 60 * 60 * 1000;
       
       if (!isRejected || shouldShowAfter7Days) {
-        // Mostrar com delay para não interferir no carregamento
-        setTimeout(() => setShowPrompt(true), 5000);
+      // Mostrar com delay reduzido para aparecer mais rápido
+      setTimeout(() => setShowPrompt(true), 2000);
       }
     };
 
@@ -90,9 +90,9 @@ const PWAInstallPrompt: React.FC = () => {
       case 'ios':
         return {
           icon: <Share className="h-4 w-4 text-primary" />,
-          title: "📱 Adicionar à Tela Inicial",
-          instruction: "Toque em 'Compartilhar' e depois 'Adicionar à Tela Inicial'",
-          buttonText: "Instalar"
+          title: "📱 Instalar no iPhone",
+          instruction: "No Safari: toque no ícone 'Compartilhar' (caixa com seta) e selecione 'Adicionar à Tela de Início'",
+          buttonText: "Mostrar Como"
         };
       case 'android':
         return {
