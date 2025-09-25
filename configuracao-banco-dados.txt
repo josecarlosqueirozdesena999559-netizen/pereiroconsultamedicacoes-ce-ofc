@@ -27,6 +27,7 @@ CREATE TABLE public.postos (
     horario_funcionamento TEXT NOT NULL,
     status TEXT NOT NULL DEFAULT 'fechado',
     responsavel_id UUID,
+    contato TEXT,
     atualizado_em TIMESTAMP WITHOUT TIME ZONE DEFAULT now()
 );
 
@@ -161,10 +162,11 @@ VALUES (
 );
 
 -- Inserir alguns postos de exemplo
-INSERT INTO public.postos (nome, localidade, horario_funcionamento, status) VALUES
-('UBS Centro', 'Centro', '07:00 - 17:00', 'aberto'),
-('UBS São José', 'São José', '07:00 - 17:00', 'fechado'),
-('UBS Vila Nova', 'Vila Nova', '07:00 - 17:00', 'aberto');
+INSERT INTO public.postos (nome, localidade, horario_funcionamento, status, contato) VALUES
+('UBS Centro', 'Centro', '07:00 - 17:00', 'aberto', '(85) 99999-9999'),
+('UBS São José', 'São José', '07:00 - 17:00', 'fechado', '(85) 88888-8888'),
+('UBS Vila Nova', 'Vila Nova', '07:00 - 17:00', 'aberto', '(85) 77777-7777'),
+('Farmácia Municipal', 'Centro', '07:00 - 17:00', 'aberto', '(85) 66666-6666');
 
 6. CONFIGURAÇÕES ADICIONAIS
 ===========================
@@ -199,6 +201,20 @@ WHERE schemaname = 'public';
 4. Em produção, considere implementar políticas mais restritivas baseadas em autenticação
 5. O bucket de storage está configurado como público para facilitar o acesso aos PDFs
 6. Teste todas as funcionalidades após a configuração
+7. CAMPO CONTATO: Foi adicionado campo opcional 'contato' na tabela postos para armazenar telefones/emails
+8. FUNCIONALIDADE ESPECIAL: Quando o nome da UBS contém "farmacia municipal", o sistema exibe "CAF - Centro de Abastecimento Farmacêutico" em vez de "Unidade Básica de Saúde"
+
+INSTRUÇÕES PARA ADICIONAR CAMPO CONTATO EM PROJETO EXISTENTE:
+-------------------------------------------------------------
+Se você já tem um banco configurado e quer adicionar o campo contato:
+
+1. Execute este comando SQL no SQL Editor do Supabase:
+   ALTER TABLE public.postos ADD COLUMN contato TEXT;
+
+2. Se quiser preencher contatos existentes:
+   UPDATE public.postos SET contato = '(85) 99999-9999' WHERE nome = 'Nome da UBS';
+
+3. O campo aparecerá automaticamente no formulário de cadastro e nos cartões das UBS
 
 9. COMANDOS DE VERIFICAÇÃO
 =========================

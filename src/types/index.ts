@@ -4,6 +4,7 @@ export interface UBS {
   localidade: string;
   horarios: string;
   responsavel: string;
+  contato?: string;
   status: 'aberto' | 'fechado';
   pdfUrl?: string;
   pdfUltimaAtualizacao?: string;

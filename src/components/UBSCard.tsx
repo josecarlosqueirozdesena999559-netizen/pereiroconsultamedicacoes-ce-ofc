@@ -41,6 +41,13 @@ const UBSCard = ({ ubs }: UBSCardProps) => {
     return status === 'aberto' ? 'Em Funcionamento' : 'Temporariamente Fechado';
   };
 
+  const getUBSType = (nome: string) => {
+    if (nome.toLowerCase().includes('farmacia municipal')) {
+      return 'CAF - Centro de Abastecimento Farmacêutico';
+    }
+    return 'Unidade Básica de Saúde';
+  };
+
   return (
     <Card className="hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-2 hover:border-primary/40 bg-gradient-to-br from-card to-card/95 backdrop-blur-sm w-full">
       <CardHeader className="pb-4 bg-gradient-to-r from-primary/8 to-primary/12 rounded-t-lg">
@@ -54,7 +61,7 @@ const UBSCard = ({ ubs }: UBSCardProps) => {
                 {ubs.nome}
               </CardTitle>
               <p className="text-xs sm:text-sm text-muted-foreground font-medium">
-                Unidade Básica de Saúde
+                {getUBSType(ubs.nome)}
               </p>
             </div>
           </div>
@@ -105,7 +112,9 @@ const UBSCard = ({ ubs }: UBSCardProps) => {
             </div>
             <div className="min-w-0 flex-1">
               <p className="font-medium text-foreground text-xs sm:text-sm">Contato</p>
-              <p className="text-muted-foreground text-xs sm:text-sm">Disponível no local</p>
+              <p className="text-muted-foreground text-xs sm:text-sm break-words">
+                {ubs.contato || 'Disponível no local'}
+              </p>
             </div>
           </div>
         </div>

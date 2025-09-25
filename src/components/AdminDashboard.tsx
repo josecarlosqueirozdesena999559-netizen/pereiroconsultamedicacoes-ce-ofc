@@ -27,6 +27,7 @@ const AdminDashboard = () => {
     localidade: '',
     horarios: '',
     responsavel: '',
+    contato: '',
     status: 'aberto' as 'aberto' | 'fechado'
   });
 
@@ -66,6 +67,7 @@ const AdminDashboard = () => {
       localidade: '',
       horarios: '',
       responsavel: '',
+      contato: '',
       status: 'aberto'
     });
     setEditingUBS(null);
@@ -194,6 +196,7 @@ const AdminDashboard = () => {
       localidade: ubs.localidade,
       horarios: ubs.horarios,
       responsavel: ubs.responsavel,
+      contato: ubs.contato || '',
       status: ubs.status
     });
     setIsUBSDialogOpen(true);
@@ -336,20 +339,29 @@ const AdminDashboard = () => {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="status">Status</Label>
-                      <Select
-                        value={ubsForm.status}
-                        onValueChange={(value: 'aberto' | 'fechado') => setUbsForm({...ubsForm, status: value})}
-                      >
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="aberto">Aberto</SelectItem>
-                          <SelectItem value="fechado">Fechado</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <Label htmlFor="contato">Contato</Label>
+                      <Input
+                        id="contato"
+                        value={ubsForm.contato}
+                        onChange={(e) => setUbsForm({...ubsForm, contato: e.target.value})}
+                        placeholder="Ex: (85) 99999-9999"
+                      />
                     </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="status">Status</Label>
+                    <Select
+                      value={ubsForm.status}
+                      onValueChange={(value: 'aberto' | 'fechado') => setUbsForm({...ubsForm, status: value})}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="aberto">Aberto</SelectItem>
+                        <SelectItem value="fechado">Fechado</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                   <div className="flex justify-end space-x-2">
                     <Button type="button" variant="outline" onClick={() => setIsUBSDialogOpen(false)}>
@@ -380,6 +392,7 @@ const AdminDashboard = () => {
                     <p><strong>Local:</strong> {ubs.localidade}</p>
                     <p><strong>Horários:</strong> {ubs.horarios}</p>
                     <p><strong>Responsável:</strong> {ubs.responsavel}</p>
+                    {ubs.contato && <p><strong>Contato:</strong> {ubs.contato}</p>}
                   </div>
                   <div className="flex justify-end space-x-2 mt-4">
                     <Button size="sm" variant="outline" onClick={() => editUBS(ubs)}>

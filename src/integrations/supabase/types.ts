@@ -46,6 +46,7 @@ export type Database = {
       postos: {
         Row: {
           atualizado_em: string | null
+          contato: string | null
           horario_funcionamento: string
           id: string
           localidade: string
@@ -55,6 +56,7 @@ export type Database = {
         }
         Insert: {
           atualizado_em?: string | null
+          contato?: string | null
           horario_funcionamento: string
           id?: string
           localidade: string
@@ -64,6 +66,7 @@ export type Database = {
         }
         Update: {
           atualizado_em?: string | null
+          contato?: string | null
           horario_funcionamento?: string
           id?: string
           localidade?: string
