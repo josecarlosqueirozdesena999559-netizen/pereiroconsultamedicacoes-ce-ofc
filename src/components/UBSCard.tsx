@@ -42,7 +42,10 @@ const UBSCard = ({ ubs }: UBSCardProps) => {
   };
 
   const getUBSType = (nome: string) => {
-    if (nome.toLowerCase().includes('farmacia municipal')) {
+    const nomeNormalized = nome.toLowerCase().trim();
+    if (nomeNormalized.includes('farmacia municipal') || 
+        nomeNormalized.includes('farmácia municipal') ||
+        nomeNormalized.includes('farmacia') && nomeNormalized.includes('municipal')) {
       return 'CAF - Centro de Abastecimento Farmacêutico';
     }
     return 'Unidade Básica de Saúde';

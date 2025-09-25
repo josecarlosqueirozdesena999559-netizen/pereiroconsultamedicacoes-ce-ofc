@@ -16,6 +16,7 @@ const transformPostoToUBS = (posto: any, pdf?: any): UBS => ({
   localidade: posto.localidade,
   horarios: posto.horario_funcionamento,
   responsavel: posto.responsavel_id || 'Não definido',
+  contato: posto.contato,
   status: posto.status as 'aberto' | 'fechado',
   pdfUrl: pdf?.url,
   pdfUltimaAtualizacao: pdf?.data_upload ? new Date(pdf.data_upload).toLocaleDateString('pt-BR') : undefined,
@@ -97,6 +98,7 @@ export const addUBS = async (ubs: Omit<UBS, 'id' | 'createdAt' | 'updatedAt'>): 
         nome: ubs.nome,
         localidade: ubs.localidade,
         horario_funcionamento: ubs.horarios,
+        contato: ubs.contato,
         status: ubs.status
       })
       .select()
@@ -117,6 +119,7 @@ export const updateUBS = async (id: string, updates: Partial<UBS>): Promise<UBS 
     if (updates.nome) updateData.nome = updates.nome;
     if (updates.localidade) updateData.localidade = updates.localidade;
     if (updates.horarios) updateData.horario_funcionamento = updates.horarios;
+    if (updates.contato !== undefined) updateData.contato = updates.contato;
     if (updates.status) updateData.status = updates.status;
 
     const { data, error } = await supabase
