@@ -16,7 +16,7 @@ const transformPostoToUBS = (posto: any, pdf?: any): UBS => ({
   localidade: posto.localidade,
   horarios: posto.horario_funcionamento,
   responsavel: posto.responsavel_id || 'Não definido',
-  contato: posto.contato,
+  contato: posto.contato || undefined,
   status: posto.status as 'aberto' | 'fechado',
   pdfUrl: pdf?.url,
   pdfUltimaAtualizacao: pdf?.data_upload ? new Date(pdf.data_upload).toLocaleDateString('pt-BR') : undefined,
