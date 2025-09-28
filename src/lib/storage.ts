@@ -43,43 +43,38 @@ export const getUBS = async (): Promise<UBS[]> => {
 
     if (error) throw error;
 
-    // Get PDFs for all postos
     const { data: pdfs } = await supabase
       .from('arquivos_pdf')
       .select('*');
 
-    // Get all users and their UBS links
     const { data: usuarios } = await supabase
       .from('usuarios')
-      .select('id, nome, email, tipo');
+      .select('*');
 
     const { data: vinculacoes } = await supabase
       .from('usuario_posto')
-      .select('user_id, posto_id');
+      .select('*');
 
     return (postos || []).map(posto => {
       const pdf = pdfs?.find(p => p.posto_id === posto.id);
-      
-      // Find responsible user for this posto
-      const vinculacao = vinculacoes?.find(v => v.posto_id === posto.id);
+
+      const vinc = vinculacoes?.find(v => v.posto_id === posto.id);
       let responsavel = 'Não definido';
-      
-      if (vinculacao) {
-        const responsavelUser = usuarios?.find(u => u.id === vinculacao.user_id && u.tipo === 'responsavel');
-        if (responsavelUser) {
-          responsavel = responsavelUser.nome || responsavelUser.email;
-        }
+      if (vinc) {
+        const user = usuarios?.find(u => u.id === vinc.user_id && u.tipo === 'responsavel');
+        if (user) responsavel = user.nome || user.email;
       }
-      
+
       return {
         id: posto.id,
         nome: posto.nome,
         localidade: posto.localidade,
         horarios: posto.horario_funcionamento,
-        responsavel: responsavel,
+        responsavel,
         status: posto.status as 'aberto' | 'fechado',
         pdfUrl: pdf?.url,
         pdfUltimaAtualizacao: pdf?.data_upload ? new Date(pdf.data_upload).toLocaleDateString('pt-BR') : undefined,
+        contato: posto.contato || undefined,
         createdAt: posto.atualizado_em || new Date().toISOString(),
         updatedAt: posto.atualizado_em || new Date().toISOString()
       };
@@ -161,7 +156,6 @@ export const getUsers = async (): Promise<User[]> => {
 
     if (error) throw error;
 
-    // Get user-posto relationships
     const { data: vinculacoes } = await supabase
       .from('usuario_posto')
       .select('*');
@@ -183,7 +177,7 @@ export const addUser = async (user: Omit<User, 'id' | 'createdAt' | 'updatedAt'>
       .insert({
         email: user.login,
         senha: user.senha,
-        nome: user.login, // Using email as name for now
+        nome: user.login,
         tipo: user.tipo
       })
       .select()
@@ -191,7 +185,6 @@ export const addUser = async (user: Omit<User, 'id' | 'createdAt' | 'updatedAt'>
 
     if (error) throw error;
 
-    // Create user-posto relationships
     if (user.ubsVinculadas.length > 0) {
       const vinculacoes = user.ubsVinculadas.map(postoId => ({
         user_id: data.id,
@@ -233,7 +226,6 @@ export const updateUser = async (id: string, updates: Partial<User>): Promise<Us
       if (error) throw error;
       userRow = data;
     } else {
-      // Fetch the current user to avoid PGRST116 when no columns are updated
       const { data, error } = await supabase
         .from('usuarios')
         .select('*')
@@ -243,23 +235,18 @@ export const updateUser = async (id: string, updates: Partial<User>): Promise<Us
       userRow = data;
     }
 
-    // Update user-posto relationships if provided
     if (updates.ubsVinculadas) {
-      // Remove existing relationships for this user
       await supabase
         .from('usuario_posto')
         .delete()
         .eq('user_id', id);
 
-      // Ensure exclusividade por posto: remova qualquer outro usuário vinculado aos mesmos postos
       if (updates.ubsVinculadas.length > 0) {
-        // Remove links for these postos from other users
         await supabase
           .from('usuario_posto')
           .delete()
           .in('posto_id', updates.ubsVinculadas);
 
-        // Add new relationships
         const vinculacoes = updates.ubsVinculadas.map(postoId => ({
           user_id: id,
           posto_id: postoId
@@ -269,7 +256,6 @@ export const updateUser = async (id: string, updates: Partial<User>): Promise<Us
           .from('usuario_posto')
           .insert(vinculacoes);
 
-        // Opcional: refletir também em postos.responsavel_id
         for (const postoId of updates.ubsVinculadas) {
           await supabase
             .from('postos')
@@ -303,19 +289,16 @@ export const deleteUser = async (id: string): Promise<boolean> => {
 // Define vínculo 1:1 entre posto e responsável
 export const setPostoResponsavel = async (postoId: string, userId: string | null): Promise<boolean> => {
   try {
-    // Remover qualquer vínculo existente para este posto
     await supabase
       .from('usuario_posto')
       .delete()
       .eq('posto_id', postoId);
 
-    // Atualizar o campo responsavel_id do posto
     await supabase
       .from('postos')
       .update({ responsavel_id: userId })
       .eq('id', postoId);
 
-    // Se houver usuário, criar novo vínculo
     if (userId) {
       const { error } = await supabase
         .from('usuario_posto')
@@ -330,7 +313,7 @@ export const setPostoResponsavel = async (postoId: string, userId: string | null
   }
 };
 
-// Auth operations - using custom usuarios table for now
+// Auth operations
 export const authenticateUser = async (login: string, senha: string): Promise<User | null> => {
   try {
     const { data: usuario, error } = await supabase
@@ -342,7 +325,6 @@ export const authenticateUser = async (login: string, senha: string): Promise<Us
 
     if (error || !usuario) return null;
 
-    // Get user's posto relationships
     const { data: vinculacoes } = await supabase
       .from('usuario_posto')
       .select('posto_id')
@@ -372,8 +354,7 @@ export const clearAuth = (): void => {
 export const savePDF = async (ubsId: string, file: File): Promise<string> => {
   try {
     const fileName = `${ubsId}/${Date.now()}-${file.name}`;
-    
-    // Remove existing file for this UBS first
+
     const { data: existingFiles } = await supabase.storage
       .from('medicacoes_ubs')
       .list(ubsId);
@@ -385,7 +366,6 @@ export const savePDF = async (ubsId: string, file: File): Promise<string> => {
         .remove(filesToRemove);
     }
 
-    // Upload new file
     const { data: uploadData, error: uploadError } = await supabase.storage
       .from('medicacoes_ubs')
       .upload(fileName, file, {
@@ -401,8 +381,6 @@ export const savePDF = async (ubsId: string, file: File): Promise<string> => {
     const { data: urlData } = supabase.storage
       .from('medicacoes_ubs')
       .getPublicUrl(fileName);
-
-    console.log('URL gerada:', urlData.publicUrl);
 
     // Remove existing PDF record for this UBS
     await supabase
