@@ -16,7 +16,7 @@ const MedicacoesAutoCusto = () => {
             Medicações Auto Custo
           </h1>
           <p className="text-lg sm:text-xl md:text-2xl opacity-95 mb-3 sm:mb-4 font-medium">
-            CAF - CENTRO DE ATENDIMENTO FARMACÊUTICO.
+            CAF - CENTRAL DE ABASTECIMENTO FARMACÊUTICO.
           </p>
           <p className="text-sm sm:text-lg opacity-85 max-w-4xl mx-auto leading-relaxed px-4 mb-6">
             Acesso a medicamentos indicados para o tratamento de condições clínicas de maior complexidade,
@@ -119,7 +119,7 @@ const MedicacoesAutoCusto = () => {
                         </div>
 
                         <p className="text-sm text-muted-foreground text-center mt-3">
-                          Em posse dessa documentação ou para maiores esclarecimentos dirija-se a Central de Abastecimento Farmacêutico, situada a Rua Santos Dumont, 285, Centro.
+                          Em posse dessa documentação ou para maiores esclarecimentos dirija-se a Central de Abastecimento Farmacêutico, situada a Rua Santos Dumont,283, Centro.
                         </p>
                       </div>
                     </AccordionContent>
@@ -135,7 +135,7 @@ const MedicacoesAutoCusto = () => {
                     <AccordionContent className="pt-4 pb-6">
                       <div className="space-y-6">
                         <div>
-                          <h4 className="font-semibold text-info mb-4">Centro de Atendimento Farmacêutico - CAF</h4>
+                          <h4 className="font-semibold text-info mb-4">CENTRAL DE ABASTECIMENTO FARMACÊUTICO - CAF</h4>
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="space-y-4">
                               <div className="flex items-start gap-3">
