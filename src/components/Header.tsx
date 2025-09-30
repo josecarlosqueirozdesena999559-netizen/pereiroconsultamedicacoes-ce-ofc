@@ -38,7 +38,7 @@ const Header = () => {
             <div className="flex items-center space-x-4 text-center sm:text-left">
               <div>
                 <h1 className="text-lg sm:text-xl font-bold">ConsultMed</h1>
-                <p className="text-xs sm:text-sm opacity-90">Consulta de Medicações das UBS de Pereiro-CE</p>
+                <p className="text-xs sm:text-sm opacity-90">Consulta de Medicamentos Prefeitura Municipal de Pereiro</p>
               </div>
             </div>
             
