@@ -55,7 +55,7 @@ const Index = () => {
       <section className="bg-gradient-to-r from-primary via-[hsl(120_75%_25%)] to-primary text-primary-foreground py-16 sm:py-20">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold mb-4 sm:mb-6">
-            Consulta de Medicações UBS
+            Consulta de Medicamentos 
           </h1>
           <p className="text-lg sm:text-xl md:text-2xl opacity-95 mb-3 sm:mb-4 font-medium">
             Sistema Integrado de Saúde Pública 
