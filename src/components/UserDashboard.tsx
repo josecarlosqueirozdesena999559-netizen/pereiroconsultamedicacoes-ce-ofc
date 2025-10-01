@@ -3,23 +3,67 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
-import { Upload, Download, Calendar, FileText, AlertCircle } from 'lucide-react';
+import { Upload, Download, Calendar, FileText, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { UBS } from '@/types';
 import { getUBS, savePDF, getPDF } from '@/lib/storage';
 
 const UserDashboard = () => {
   const [ubsList, setUbsList] = useState<UBS[]>([]);
   const [uploadingUBS, setUploadingUBS] = useState<string | null>(null);
+  const [updateChecks, setUpdateChecks] = useState<Record<string, { manha: boolean; tarde: boolean }>>({});
   const { user } = useAuth();
   const { toast } = useToast();
 
   useEffect(() => {
     if (user) {
       loadUserUBS();
+      loadUpdateChecks();
     }
   }, [user]);
+
+  const loadUpdateChecks = () => {
+    const today = new Date().toDateString();
+    const saved = localStorage.getItem('updateChecks');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (parsed.date === today) {
+        setUpdateChecks(parsed.checks);
+      } else {
+        // Novo dia, reseta os checks
+        setUpdateChecks({});
+        localStorage.removeItem('updateChecks');
+      }
+    }
+  };
+
+  const saveUpdateChecks = (checks: Record<string, { manha: boolean; tarde: boolean }>) => {
+    const today = new Date().toDateString();
+    localStorage.setItem('updateChecks', JSON.stringify({ date: today, checks }));
+  };
+
+  const toggleCheck = (ubsId: string, period: 'manha' | 'tarde') => {
+    setUpdateChecks(prev => {
+      const current = prev[ubsId] || { manha: false, tarde: false };
+      const updated = {
+        ...prev,
+        [ubsId]: {
+          ...current,
+          [period]: !current[period]
+        }
+      };
+      saveUpdateChecks(updated);
+      return updated;
+    });
+  };
+
+  const isComplete = (ubsId: string) => {
+    const checks = updateChecks[ubsId];
+    return checks?.manha && checks?.tarde;
+  };
 
   const loadUserUBS = async () => {
     try {
@@ -140,6 +184,52 @@ const UserDashboard = () => {
                     <div className="flex items-center mt-2">
                       <Calendar className="h-3 w-3 mr-1" />
                       <span>Última atualização: {ubs.pdfUltimaAtualizacao}</span>
+                    </div>
+                  )}
+                </div>
+
+                {!isComplete(ubs.id) && (
+                  <Alert className="border-amber-500/20 bg-amber-500/5">
+                    <AlertCircle className="h-4 w-4 text-amber-600" />
+                    <AlertTitle className="text-amber-700 font-semibold text-sm">Lembrete</AlertTitle>
+                    <AlertDescription className="text-amber-600/90 text-xs">
+                      Não esqueça de atualizar os documentos hoje
+                    </AlertDescription>
+                  </Alert>
+                )}
+
+                <div className="bg-muted/30 rounded-lg p-3 space-y-2">
+                  <p className="text-xs font-medium text-muted-foreground mb-2">Atualização diária</p>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id={`${ubs.id}-manha`}
+                      checked={updateChecks[ubs.id]?.manha || false}
+                      onCheckedChange={() => toggleCheck(ubs.id, 'manha')}
+                    />
+                    <label
+                      htmlFor={`${ubs.id}-manha`}
+                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                    >
+                      Atualizado pela manhã
+                    </label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id={`${ubs.id}-tarde`}
+                      checked={updateChecks[ubs.id]?.tarde || false}
+                      onCheckedChange={() => toggleCheck(ubs.id, 'tarde')}
+                    />
+                    <label
+                      htmlFor={`${ubs.id}-tarde`}
+                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                    >
+                      Atualizado pela tarde
+                    </label>
+                  </div>
+                  {isComplete(ubs.id) && (
+                    <div className="flex items-center gap-2 text-green-600 pt-1">
+                      <CheckCircle2 className="h-4 w-4" />
+                      <span className="text-xs font-medium">Atualização completa!</span>
                     </div>
                   )}
                 </div>
