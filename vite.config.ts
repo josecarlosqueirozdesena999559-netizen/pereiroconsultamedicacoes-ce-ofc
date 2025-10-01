@@ -10,22 +10,16 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
   },
   plugins: [
-    react({
-      jsxImportSource: 'react',
-    }), 
+    react(), 
     mode === "development" && componentTagger()
   ].filter(Boolean),
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
-      'react': path.resolve(__dirname, './node_modules/react'),
-      'react-dom': path.resolve(__dirname, './node_modules/react-dom'),
     },
   },
   optimizeDeps: {
     include: ['react', 'react-dom', '@tanstack/react-query'],
-    esbuildOptions: {
-      jsx: 'automatic',
-    },
+    force: true,
   },
 }));
