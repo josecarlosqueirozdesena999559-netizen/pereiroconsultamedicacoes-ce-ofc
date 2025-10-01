@@ -8,7 +8,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
-import { Plus, Edit2, Trash2, Building2, Users, UserPlus, Link, Unlink } from 'lucide-react';
+import { Plus, Edit2, Trash2, Building2, Users, UserPlus, Link, Unlink, Clock } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { UBS, User } from '@/types';
 import { getUBS, addUBS, updateUBS, deleteUBS, getUsers, addUser, updateUser, deleteUser, setPostoResponsavel } from '@/lib/storage';
 
@@ -522,6 +523,20 @@ const AdminDashboard = () => {
 
         <TabsContent value="links" className="space-y-4">
           <h2 className="text-2xl font-semibold">Gerenciar Vinculações</h2>
+          
+          <Alert className="border-primary/20 bg-primary/5">
+            <Clock className="h-5 w-5 text-primary" />
+            <AlertTitle className="text-primary font-semibold">Lembrete Importante</AlertTitle>
+            <AlertDescription className="text-foreground/80">
+              <p className="mb-2">Oriente os responsáveis de UBS a atualizarem os documentos diariamente nos seguintes horários:</p>
+              <ul className="list-disc list-inside space-y-1 ml-2">
+                <li><strong>8h às 10h</strong> - Início do expediente (menor fluxo de pacientes)</li>
+                <li><strong>12h às 14h</strong> - Horário de almoço (momento ideal para organização)</li>
+                <li><strong>16h às 17h</strong> - Final do expediente (consolidação do dia)</li>
+              </ul>
+              <p className="mt-2 text-sm italic">A atualização regular garante informações precisas e evita acúmulo de pendências.</p>
+            </AlertDescription>
+          </Alert>
           
           <div className="grid gap-4">
             {usersList.filter(user => user.tipo === 'responsavel').map((user) => (
