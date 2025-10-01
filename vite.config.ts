@@ -9,15 +9,23 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
-  plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
+  plugins: [
+    react({
+      jsxImportSource: 'react',
+    }), 
+    mode === "development" && componentTagger()
+  ].filter(Boolean),
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      'react': path.resolve(__dirname, './node_modules/react'),
+      'react-dom': path.resolve(__dirname, './node_modules/react-dom'),
     },
-    dedupe: ['react', 'react-dom', '@tanstack/react-query', '@radix-ui/react-tooltip'],
   },
   optimizeDeps: {
     include: ['react', 'react-dom', '@tanstack/react-query'],
-    force: true,
+    esbuildOptions: {
+      jsx: 'automatic',
+    },
   },
 }));
