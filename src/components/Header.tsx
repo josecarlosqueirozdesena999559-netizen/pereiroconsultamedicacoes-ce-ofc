@@ -57,7 +57,7 @@ const Header = () => {
               <Button
                 variant="ghost"
                 onClick={() => navigate('/medicacoes-auto-custo')}
-                className="text-primary-foreground hover:bg-white/10 text-sm"
+                className="bg-white text-primary hover:bg-white/90 text-sm"
               >
                 <Pill className="h-4 w-4 mr-1 sm:mr-2" />
                 Medicações Auto Custo
@@ -97,7 +97,7 @@ const Header = () => {
                 <Button
                   variant="ghost"
                   onClick={() => navigate('/login')}
-                  className="text-primary-foreground hover:bg-white/10 text-sm"
+                  className="bg-white text-primary hover:bg-white/90 text-sm"
                 >
                   Entrar
                 </Button>
