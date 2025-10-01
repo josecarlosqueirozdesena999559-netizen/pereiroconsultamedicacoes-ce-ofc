@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Download, X, Smartphone, Share, Plus } from 'lucide-react';
@@ -9,11 +9,11 @@ interface BeforeInstallPromptEvent extends Event {
 }
 
 const PWAInstallPrompt: React.FC = () => {
-  const [deferredPrompt, setDeferredPrompt] = React.useState<BeforeInstallPromptEvent | null>(null);
-  const [showPrompt, setShowPrompt] = React.useState(false);
-  const [deviceType, setDeviceType] = React.useState<'android' | 'ios' | 'desktop' | 'other'>('other');
+  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const [showPrompt, setShowPrompt] = useState(false);
+  const [deviceType, setDeviceType] = useState<'android' | 'ios' | 'desktop' | 'other'>('other');
 
-  React.useEffect(() => {
+  useEffect(() => {
     // Detectar tipo de dispositivo
     const userAgent = navigator.userAgent.toLowerCase();
     const isIOS = /iphone|ipad|ipod/.test(userAgent);
