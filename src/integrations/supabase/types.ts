@@ -84,6 +84,51 @@ export type Database = {
           },
         ]
       }
+      update_checks: {
+        Row: {
+          created_at: string | null
+          data: string
+          id: string
+          manha: boolean
+          tarde: boolean
+          ubs_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          data?: string
+          id?: string
+          manha?: boolean
+          tarde?: boolean
+          ubs_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          data?: string
+          id?: string
+          manha?: boolean
+          tarde?: boolean
+          ubs_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "update_checks_ubs_id_fkey"
+            columns: ["ubs_id"]
+            isOneToOne: false
+            referencedRelation: "postos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "update_checks_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       usuario_posto: {
         Row: {
           posto_id: string
@@ -146,6 +191,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      cleanup_old_update_checks: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       fn_login: {
         Args: { p_email: string; p_senha: string }
         Returns: {
