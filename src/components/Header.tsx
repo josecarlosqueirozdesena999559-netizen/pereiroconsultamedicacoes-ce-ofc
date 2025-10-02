@@ -70,7 +70,7 @@ const Header = () => {
                 <Button
                   variant="ghost"
                   onClick={() => navigate('/dashboard')}
-                  className="text-primary-foreground hover:bg-white/10 text-sm"
+                  className="bg-white text-primary hover:bg-white/90 text-sm"
                 >
                   <Settings className="h-4 w-4 mr-1 sm:mr-2" />
                   Área Admin
