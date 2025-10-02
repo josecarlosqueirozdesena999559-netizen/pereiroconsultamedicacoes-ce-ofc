@@ -38,16 +38,19 @@ const Header = () => {
             <div className="flex items-center space-x-4 text-center sm:text-left">
               <div>
                 <h1 className="text-lg sm:text-xl font-bold">ConsultMed</h1>
-                <p className="text-xs sm:text-sm opacity-90">Consulta de Medicamentos Prefeitura Municipal de Pereiro</p>
+                <p className="text-xs sm:text-sm opacity-90">
+                  Consulta de Medicamentos Prefeitura Municipal de Pereiro
+                </p>
               </div>
             </div>
             
             <nav className="flex items-center space-x-2 sm:space-x-4">
+              {/* Botão Início corrigido */}
               {!isHomePage && (
                 <Button
                   variant="ghost"
                   onClick={() => navigate('/')}
-                  className="text-primary-foreground hover:bg-white/10 text-sm"
+                  className="bg-white text-primary hover:bg-white/90 text-sm"
                 >
                   <Home className="h-4 w-4 mr-1 sm:mr-2" />
                   Início
