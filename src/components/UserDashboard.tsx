@@ -9,7 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { Upload, Download, Calendar, FileText, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { UBS } from '@/types';
-import { getUBS, savePDF, getPDF } from '@/lib/storage';
+import { getUBS, savePDF, getPDF, getUpdateChecks, saveUpdateCheck } from '@/lib/storage';
 
 const UserDashboard = () => {
   const [ubsList, setUbsList] = useState<UBS[]>([]);
@@ -21,43 +21,58 @@ const UserDashboard = () => {
   useEffect(() => {
     if (user) {
       loadUserUBS();
-      loadUpdateChecks();
     }
   }, [user]);
 
-  const loadUpdateChecks = () => {
-    const today = new Date().toDateString();
-    const saved = localStorage.getItem('updateChecks');
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      if (parsed.date === today) {
-        setUpdateChecks(parsed.checks);
-      } else {
-        // Novo dia, reseta os checks
-        setUpdateChecks({});
-        localStorage.removeItem('updateChecks');
-      }
+  const loadUpdateChecksForUBS = async (ubsId: string) => {
+    if (!user) return;
+    
+    const checks = await getUpdateChecks(user.id, ubsId);
+    if (checks) {
+      setUpdateChecks(prev => ({
+        ...prev,
+        [ubsId]: checks
+      }));
     }
   };
 
-  const saveUpdateChecks = (checks: Record<string, { manha: boolean; tarde: boolean }>) => {
-    const today = new Date().toDateString();
-    localStorage.setItem('updateChecks', JSON.stringify({ date: today, checks }));
-  };
+  const toggleCheck = async (ubsId: string, period: 'manha' | 'tarde') => {
+    if (!user) return;
 
-  const toggleCheck = (ubsId: string, period: 'manha' | 'tarde') => {
-    setUpdateChecks(prev => {
-      const current = prev[ubsId] || { manha: false, tarde: false };
-      const updated = {
+    const current = updateChecks[ubsId] || { manha: false, tarde: false };
+    
+    // Se já está marcado, não permite desmarcar
+    if (current[period]) {
+      toast({
+        title: "Não é possível alterar",
+        description: "Uma vez marcado, não é possível desmarcar.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const success = await saveUpdateCheck(user.id, ubsId, period);
+    
+    if (success) {
+      setUpdateChecks(prev => ({
         ...prev,
         [ubsId]: {
           ...current,
-          [period]: !current[period]
+          [period]: true
         }
-      };
-      saveUpdateChecks(updated);
-      return updated;
-    });
+      }));
+      
+      toast({
+        title: "Atualização registrada",
+        description: `Atualização da ${period} foi marcada com sucesso.`,
+      });
+    } else {
+      toast({
+        title: "Erro ao registrar",
+        description: "Não foi possível registrar a atualização.",
+        variant: "destructive",
+      });
+    }
   };
 
   const isComplete = (ubsId: string) => {
@@ -70,6 +85,11 @@ const UserDashboard = () => {
       const allUBS = await getUBS();
       const userUBS = allUBS.filter(ubs => user?.ubsVinculadas.includes(ubs.id));
       setUbsList(userUBS);
+      
+      // Carregar checks para cada UBS
+      userUBS.forEach(ubs => {
+        loadUpdateChecksForUBS(ubs.id);
+      });
     } catch (error) {
       console.error('Erro ao carregar UBS do usuário:', error);
     }

@@ -422,3 +422,71 @@ export const getPDF = async (ubsId: string): Promise<any> => {
     return null;
   }
 };
+
+// Update Checks operations
+export const getUpdateChecks = async (userId: string, ubsId: string): Promise<{ manha: boolean; tarde: boolean } | null> => {
+  try {
+    const { data, error } = await supabase
+      .from('update_checks')
+      .select('*')
+      .eq('user_id', userId)
+      .eq('ubs_id', ubsId)
+      .eq('data', new Date().toISOString().split('T')[0])
+      .maybeSingle();
+
+    if (error) throw error;
+
+    return data ? { manha: data.manha, tarde: data.tarde } : null;
+  } catch (error) {
+    console.error('Erro ao buscar checks:', error);
+    return null;
+  }
+};
+
+export const saveUpdateCheck = async (userId: string, ubsId: string, period: 'manha' | 'tarde'): Promise<boolean> => {
+  try {
+    const today = new Date().toISOString().split('T')[0];
+    
+    // Verificar se já existe um registro para hoje
+    const { data: existing } = await supabase
+      .from('update_checks')
+      .select('*')
+      .eq('user_id', userId)
+      .eq('ubs_id', ubsId)
+      .eq('data', today)
+      .maybeSingle();
+
+    if (existing) {
+      // Se já está marcado, não permite alterar
+      if (existing[period]) {
+        return false;
+      }
+      
+      // Atualizar o período específico
+      const { error } = await supabase
+        .from('update_checks')
+        .update({ [period]: true })
+        .eq('id', existing.id);
+
+      if (error) throw error;
+    } else {
+      // Criar novo registro
+      const { error } = await supabase
+        .from('update_checks')
+        .insert({
+          user_id: userId,
+          ubs_id: ubsId,
+          data: today,
+          manha: period === 'manha',
+          tarde: period === 'tarde'
+        });
+
+      if (error) throw error;
+    }
+
+    return true;
+  } catch (error) {
+    console.error('Erro ao salvar check:', error);
+    return false;
+  }
+};
