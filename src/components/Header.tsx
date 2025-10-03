@@ -33,53 +33,55 @@ const Header = () => {
       
       {/* Navigation Section */}
       <div className="bg-gradient-to-r from-primary to-[hsl(120_75%_25%)] text-primary-foreground">
-        <div className="container mx-auto px-4 py-3 sm:py-4">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0">
+        <div className="container mx-auto px-3 sm:px-4 py-2 sm:py-4">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-0">
             <div className="flex items-center space-x-4 text-center sm:text-left">
               <div>
-                <h1 className="text-lg sm:text-xl font-bold">ConsultMed</h1>
-                <p className="text-xs sm:text-sm opacity-90">
+                <h1 className="text-base sm:text-xl font-bold">ConsultMed</h1>
+                <p className="text-xs opacity-90">
                   Consulta de Medicamentos Prefeitura Municipal de Pereiro
                 </p>
               </div>
             </div>
             
-            <nav className="flex items-center space-x-2 sm:space-x-4">
+            <nav className="flex items-center flex-wrap justify-center gap-1.5 sm:gap-2">
               {/* Botão Início corrigido */}
               {!isHomePage && (
                 <Button
                   variant="ghost"
                   onClick={() => navigate('/')}
-                  className="bg-white text-primary hover:bg-white/90 text-sm"
+                  className="bg-white text-primary hover:bg-white/90 text-xs sm:text-sm px-2 sm:px-4 h-8 sm:h-10"
                 >
-                  <Home className="h-4 w-4 mr-1 sm:mr-2" />
-                  Início
+                  <Home className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                  <span className="hidden sm:inline">Início</span>
                 </Button>
               )}
               
               <Button
                 variant="ghost"
                 onClick={() => navigate('/medicacoes-auto-custo')}
-                className="bg-white text-primary hover:bg-white/90 text-sm"
+                className="bg-white text-primary hover:bg-white/90 text-xs sm:text-sm px-2 sm:px-4 h-8 sm:h-10"
               >
-                <Pill className="h-4 w-4 mr-1 sm:mr-2" />
-                Medicações Auto Custo
+                <Pill className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                <span className="hidden sm:inline">Medicações Auto Custo</span>
+                <span className="sm:hidden">Med. Auto Custo</span>
               </Button>
               
               {isAuthenticated && isHomePage && (
                 <Button
                   variant="ghost"
                   onClick={() => navigate('/dashboard')}
-                  className="bg-white text-primary hover:bg-white/90 text-sm"
+                  className="bg-white text-primary hover:bg-white/90 text-xs sm:text-sm px-2 sm:px-4 h-8 sm:h-10"
                 >
-                  <Settings className="h-4 w-4 mr-1 sm:mr-2" />
-                  Área Admin
+                  <Settings className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                  <span className="hidden sm:inline">Área Admin</span>
+                  <span className="sm:hidden">Admin</span>
                 </Button>
               )}
               
               {isAuthenticated ? (
-                <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4">
-                  <span className="text-xs sm:text-sm opacity-90 text-center sm:text-left">
+                <div className="flex flex-col sm:flex-row items-center gap-2">
+                  <span className="text-xs opacity-90 text-center sm:text-left hidden sm:block">
                     Olá, <span className="font-semibold">{user?.login}</span>
                     {user?.tipo === 'admin' && (
                       <span className="ml-2 text-xs bg-white/20 px-2 py-1 rounded">
@@ -90,9 +92,9 @@ const Header = () => {
                   <Button
                     variant="ghost"
                     onClick={handleLogout}
-                    className="text-primary-foreground hover:bg-white/10 text-sm"
+                    className="text-primary-foreground hover:bg-white/10 text-xs sm:text-sm px-2 sm:px-4 h-8 sm:h-10"
                   >
-                    <LogOut className="h-4 w-4 mr-1 sm:mr-2" />
+                    <LogOut className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                     Sair
                   </Button>
                 </div>
@@ -100,7 +102,7 @@ const Header = () => {
                 <Button
                   variant="ghost"
                   onClick={() => navigate('/login')}
-                  className="bg-white text-primary hover:bg-white/90 text-sm"
+                  className="bg-white text-primary hover:bg-white/90 text-xs sm:text-sm px-2 sm:px-4 h-8 sm:h-10"
                 >
                   Entrar
                 </Button>
