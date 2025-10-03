@@ -16,6 +16,7 @@ export interface User {
   id: string;
   login: string;
   senha: string;
+  nome: string;
   tipo: 'admin' | 'responsavel';
   ubsVinculadas: string[];
   createdAt: string;

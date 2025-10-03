@@ -28,6 +28,7 @@ const transformUsuarioToUser = (usuario: any, vinculacoes: any[] = []): User => 
   id: usuario.id,
   login: usuario.email,
   senha: usuario.senha,
+  nome: usuario.nome || usuario.email,
   tipo: usuario.tipo,
   ubsVinculadas: vinculacoes.map(v => v.posto_id),
   createdAt: usuario.criado_em || new Date().toISOString(),
@@ -177,7 +178,7 @@ export const addUser = async (user: Omit<User, 'id' | 'createdAt' | 'updatedAt'>
       .insert({
         email: user.login,
         senha: user.senha,
-        nome: user.login,
+        nome: user.nome,
         tipo: user.tipo
       })
       .select()
@@ -206,10 +207,8 @@ export const addUser = async (user: Omit<User, 'id' | 'createdAt' | 'updatedAt'>
 export const updateUser = async (id: string, updates: Partial<User>): Promise<User | null> => {
   try {
     const updateData: any = {};
-    if (updates.login) {
-      updateData.email = updates.login;
-      updateData.nome = updates.login;
-    }
+    if (updates.login) updateData.email = updates.login;
+    if (updates.nome) updateData.nome = updates.nome;
     if (updates.senha) updateData.senha = updates.senha;
     if (updates.tipo) updateData.tipo = updates.tipo;
 
