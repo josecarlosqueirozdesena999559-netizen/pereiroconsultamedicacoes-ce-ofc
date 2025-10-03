@@ -33,7 +33,6 @@ const AdminDashboard = () => {
 
   // User Form State
   const [userForm, setUserForm] = useState({
-    nome: '',
     login: '',
     senha: '',
     tipo: 'responsavel' as 'admin' | 'responsavel',
@@ -76,7 +75,6 @@ const AdminDashboard = () => {
 
   const resetUserForm = () => {
     setUserForm({
-      nome: '',
       login: '',
       senha: '',
       tipo: 'responsavel',
@@ -132,7 +130,7 @@ const AdminDashboard = () => {
         });
         toast({
           title: "Usuário atualizado com sucesso!",
-          description: `${userForm.nome} foi atualizado.`,
+          description: `${userForm.login} foi atualizado.`,
         });
       } else {
         // Check if login already exists
@@ -153,7 +151,7 @@ const AdminDashboard = () => {
         });
         toast({
           title: "Usuário criado com sucesso!",
-          description: `${userForm.nome} foi adicionado ao sistema.`,
+          description: `${userForm.login} foi adicionado ao sistema.`,
         });
       }
       
@@ -207,7 +205,6 @@ const AdminDashboard = () => {
   const editUser = (user: User) => {
     setEditingUser(user);
     setUserForm({
-      nome: user.nome,
       login: user.login,
       senha: user.senha,
       tipo: user.tipo,
@@ -245,7 +242,7 @@ const AdminDashboard = () => {
         title: isLinked ? 'Vinculação removida' : 'Vinculação criada',
         description: isLinked
           ? `Responsável removido de ${ubs?.nome ?? 'UBS'}.`
-          : `${user.nome} definido como responsável de ${ubs?.nome ?? 'UBS'}.`,
+          : `${user.login} definido como responsável de ${ubs?.nome ?? 'UBS'}.`,
       });
     } catch (error) {
       toast({
@@ -431,25 +428,13 @@ const AdminDashboard = () => {
                   </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleUserSubmit} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="nome">Nome Completo</Label>
-                    <Input
-                      id="nome"
-                      value={userForm.nome}
-                      onChange={(e) => setUserForm({...userForm, nome: e.target.value})}
-                      placeholder="Nome do usuário"
-                      required
-                    />
-                  </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="login">Email/Login</Label>
+                      <Label htmlFor="login">Login</Label>
                       <Input
                         id="login"
-                        type="email"
                         value={userForm.login}
                         onChange={(e) => setUserForm({...userForm, login: e.target.value})}
-                        placeholder="email@exemplo.com"
                         required
                       />
                     </div>
@@ -497,10 +482,7 @@ const AdminDashboard = () => {
               <Card key={user.id} className="hover:shadow-md transition-shadow">
                 <CardHeader className="pb-2">
                   <div className="flex justify-between items-start">
-                    <div className="flex flex-col">
-                      <CardTitle className="text-lg">{user.nome}</CardTitle>
-                      <p className="text-xs text-muted-foreground">{user.login}</p>
-                    </div>
+                    <CardTitle className="text-lg">{user.login}</CardTitle>
                     <Badge variant={user.tipo === 'admin' ? 'default' : 'secondary'}>
                       {user.tipo === 'admin' ? 'Admin' : 'Responsável'}
                     </Badge>
@@ -546,10 +528,7 @@ const AdminDashboard = () => {
               <Card key={user.id}>
                 <CardHeader>
                   <CardTitle className="flex items-center justify-between">
-                    <div className="flex flex-col">
-                      <span>{user.nome}</span>
-                      <span className="text-xs text-muted-foreground font-normal">{user.login}</span>
-                    </div>
+                    <span>{user.login}</span>
                     <Badge variant="outline">
                       {user.ubsVinculadas.length} UBS vinculada(s)
                     </Badge>
