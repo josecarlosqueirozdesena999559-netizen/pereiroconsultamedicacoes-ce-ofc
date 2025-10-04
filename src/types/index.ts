@@ -15,6 +15,7 @@ export interface UBS {
 export interface User {
   id: string;
   login: string;
+  nome: string;
   senha: string;
   tipo: 'admin' | 'responsavel';
   ubsVinculadas: string[];

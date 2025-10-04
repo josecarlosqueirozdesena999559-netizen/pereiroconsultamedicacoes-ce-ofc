@@ -82,7 +82,7 @@ const Header = () => {
               {isAuthenticated ? (
                 <div className="flex flex-col sm:flex-row items-center gap-2">
                   <span className="text-xs opacity-90 text-center sm:text-left hidden sm:block">
-                    Olá, <span className="font-semibold">{user?.login}</span>
+                    Olá, <span className="font-semibold">{user?.nome}</span>
                     {user?.tipo === 'admin' && (
                       <span className="ml-2 text-xs bg-white/20 px-2 py-1 rounded">
                         Admin
