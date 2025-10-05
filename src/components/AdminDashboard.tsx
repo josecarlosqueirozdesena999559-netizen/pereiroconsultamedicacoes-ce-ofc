@@ -8,13 +8,23 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
-import { Plus, Edit2, Trash2, Building2, Users, UserPlus, Link, Unlink } from 'lucide-react';
+import { Plus, Edit2, Trash2, Building2, Users, UserPlus, Link, Unlink, Calendar, CheckCircle2, Circle, AlertCircle } from 'lucide-react';
 import { UBS, User } from '@/types';
 import { getUBS, addUBS, updateUBS, deleteUBS, getUsers, addUser, updateUser, deleteUser, setPostoResponsavel } from '@/lib/storage';
+import { supabase } from '@/integrations/supabase/client';
+
+interface UpdateStatus {
+  ubs_id: string;
+  user_id: string;
+  manha: boolean;
+  tarde: boolean;
+  data: string;
+}
 
 const AdminDashboard = () => {
   const [ubsList, setUbsList] = useState<UBS[]>([]);
   const [usersList, setUsersList] = useState<User[]>([]);
+  const [updateStatuses, setUpdateStatuses] = useState<UpdateStatus[]>([]);
   const [isUBSDialogOpen, setIsUBSDialogOpen] = useState(false);
   const [isUserDialogOpen, setIsUserDialogOpen] = useState(false);
   const [editingUBS, setEditingUBS] = useState<UBS | null>(null);
@@ -52,6 +62,7 @@ const AdminDashboard = () => {
       ]);
       setUbsList(ubsData);
       setUsersList(usersData);
+      await loadUpdateStatuses();
     } catch (error) {
       console.error('Erro ao carregar dados:', error);
       toast({
@@ -59,6 +70,21 @@ const AdminDashboard = () => {
         description: "Erro ao carregar dados do sistema.",
         variant: "destructive",
       });
+    }
+  };
+
+  const loadUpdateStatuses = async () => {
+    try {
+      const today = new Date().toISOString().split('T')[0];
+      const { data, error } = await supabase
+        .from('update_checks')
+        .select('*')
+        .eq('data', today);
+
+      if (error) throw error;
+      setUpdateStatuses(data || []);
+    } catch (error) {
+      console.error('Erro ao carregar status de atualizações:', error);
     }
   };
 
@@ -256,6 +282,54 @@ const AdminDashboard = () => {
     }
   };
 
+  const getUpdateStatus = (ubsId: string, userId: string) => {
+    const status = updateStatuses.find(s => s.ubs_id === ubsId && s.user_id === userId);
+    if (!status) return 'none';
+    if (status.manha && status.tarde) return 'complete';
+    if (status.manha || status.tarde) return 'partial';
+    return 'none';
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'complete':
+        return 'bg-success text-success-foreground';
+      case 'partial':
+        return 'bg-success/50 text-success-foreground';
+      case 'none':
+        return 'bg-destructive text-destructive-foreground';
+      default:
+        return 'bg-muted text-muted-foreground';
+    }
+  };
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'complete':
+        return <CheckCircle2 className="h-4 w-4" />;
+      case 'partial':
+        return <Circle className="h-4 w-4" />;
+      case 'none':
+        return <AlertCircle className="h-4 w-4" />;
+      default:
+        return <Circle className="h-4 w-4" />;
+    }
+  };
+
+  const getStatusText = (status: string, ubsId: string, userId: string) => {
+    const check = updateStatuses.find(s => s.ubs_id === ubsId && s.user_id === userId);
+    switch (status) {
+      case 'complete':
+        return 'Atualizado (Manhã e Tarde)';
+      case 'partial':
+        return check?.manha ? 'Atualizado (Manhã)' : 'Atualizado (Tarde)';
+      case 'none':
+        return 'Não atualizado';
+      default:
+        return 'Sem dados';
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -266,7 +340,7 @@ const AdminDashboard = () => {
       </div>
 
       <Tabs defaultValue="ubs" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="ubs" className="flex items-center gap-2">
             <Building2 className="h-4 w-4" />
             UBS
@@ -278,6 +352,10 @@ const AdminDashboard = () => {
           <TabsTrigger value="links" className="flex items-center gap-2">
             <Link className="h-4 w-4" />
             Vinculações
+          </TabsTrigger>
+          <TabsTrigger value="updates" className="flex items-center gap-2">
+            <Calendar className="h-4 w-4" />
+            Atualizações
           </TabsTrigger>
         </TabsList>
 
@@ -582,6 +660,89 @@ const AdminDashboard = () => {
               </Card>
             ))}
           </div>
+        </TabsContent>
+
+        <TabsContent value="updates" className="space-y-4">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-2xl font-semibold">Status de Atualizações</h2>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Calendar className="h-4 w-4" />
+              <span>Hoje: {new Date().toLocaleDateString('pt-BR')}</span>
+            </div>
+          </div>
+
+          <div className="grid gap-3 mb-6">
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 rounded-full bg-success"></div>
+              <span className="text-sm">Verde escuro: Manhã e Tarde atualizadas</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 rounded-full bg-success/50"></div>
+              <span className="text-sm">Verde claro: Apenas Manhã ou Tarde atualizada</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 rounded-full bg-destructive"></div>
+              <span className="text-sm">Vermelho: Não atualizado</span>
+            </div>
+          </div>
+
+          <div className="grid gap-4">
+            {ubsList.map((ubs) => {
+              const responsaveis = usersList.filter(u => u.ubsVinculadas.includes(ubs.id));
+              
+              return (
+                <Card key={ubs.id}>
+                  <CardHeader>
+                    <CardTitle className="text-lg">{ubs.nome}</CardTitle>
+                    <CardDescription>{ubs.localidade}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    {responsaveis.length === 0 ? (
+                      <div className="text-sm text-muted-foreground py-4 text-center">
+                        <AlertCircle className="h-5 w-5 mx-auto mb-2" />
+                        Nenhum responsável vinculado
+                      </div>
+                    ) : (
+                      <div className="space-y-2">
+                        {responsaveis.map((user) => {
+                          const status = getUpdateStatus(ubs.id, user.id);
+                          return (
+                            <div
+                              key={user.id}
+                              className={`flex items-center justify-between p-3 rounded-lg ${getStatusColor(status)}`}
+                            >
+                              <div className="flex items-center gap-3">
+                                {getStatusIcon(status)}
+                                <div>
+                                  <p className="font-medium">{user.nome}</p>
+                                  <p className="text-xs opacity-90">{user.login}</p>
+                                </div>
+                              </div>
+                              <Badge variant="outline" className="bg-white/10 border-white/20">
+                                {getStatusText(status, ubs.id, user.id)}
+                              </Badge>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+
+          {ubsList.length === 0 && (
+            <Card>
+              <CardContent className="flex flex-col items-center justify-center py-12">
+                <AlertCircle className="h-12 w-12 text-muted-foreground mb-4" />
+                <h3 className="text-lg font-semibold mb-2">Nenhuma UBS cadastrada</h3>
+                <p className="text-muted-foreground text-center">
+                  Cadastre UBS para começar a monitorar as atualizações.
+                </p>
+              </CardContent>
+            </Card>
+          )}
         </TabsContent>
       </Tabs>
     </div>
