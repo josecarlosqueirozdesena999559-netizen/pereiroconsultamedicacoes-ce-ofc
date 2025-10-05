@@ -147,8 +147,10 @@ All colors MUST be HSL.
   button {
     font-size: 16px;
   }
-  
-  /* Prevent iOS zoom on input focus */
+}
+
+/* Prevent iOS zoom on input focus - only in Safari browser, not in PWA */
+@media not all and (display-mode: standalone) {
   input[type="text"],
   input[type="email"],
   input[type="password"],
