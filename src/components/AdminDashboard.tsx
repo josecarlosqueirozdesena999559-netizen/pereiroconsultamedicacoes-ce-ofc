@@ -662,65 +662,122 @@ const AdminDashboard = () => {
           </div>
         </TabsContent>
 
-        <TabsContent value="updates" className="space-y-4">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-semibold">Status de Atualizações</h2>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Calendar className="h-4 w-4" />
-              <span>Hoje: {new Date().toLocaleDateString('pt-BR')}</span>
+        <TabsContent value="updates" className="space-y-6 animate-fade-in">
+          <div className="bg-gradient-to-r from-primary/5 to-primary/10 rounded-xl p-6 border border-primary/10">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div>
+                <h2 className="text-2xl md:text-3xl font-bold text-primary mb-2">Status de Atualizações</h2>
+                <p className="text-sm text-muted-foreground">Acompanhe as atualizações dos PDFs em tempo real</p>
+              </div>
+              <div className="flex items-center gap-2 px-4 py-2 bg-card rounded-lg border shadow-sm">
+                <Calendar className="h-5 w-5 text-primary" />
+                <div className="text-right">
+                  <p className="text-xs text-muted-foreground">Hoje</p>
+                  <p className="font-semibold">{new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })}</p>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div className="grid gap-3 mb-6">
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded-full bg-success"></div>
-              <span className="text-sm">Verde escuro: Manhã e Tarde atualizadas</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded-full bg-success/50"></div>
-              <span className="text-sm">Verde claro: Apenas Manhã ou Tarde atualizada</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 rounded-full bg-destructive"></div>
-              <span className="text-sm">Vermelho: Não atualizado</span>
-            </div>
-          </div>
+          <Card className="border-primary/20 shadow-card">
+            <CardHeader className="bg-gradient-to-r from-primary/5 to-transparent">
+              <CardTitle className="text-lg flex items-center gap-2">
+                <div className="h-8 w-1 bg-primary rounded-full"></div>
+                Legenda de Status
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="flex items-center gap-3 p-3 rounded-lg bg-success/10 border border-success/20 transition-all hover:scale-105">
+                  <div className="w-6 h-6 rounded-full bg-success shadow-sm flex items-center justify-center">
+                    <CheckCircle2 className="h-4 w-4 text-success-foreground" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-sm">Completo</p>
+                    <p className="text-xs text-muted-foreground">Manhã e Tarde</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 p-3 rounded-lg bg-success/5 border border-success/10 transition-all hover:scale-105">
+                  <div className="w-6 h-6 rounded-full bg-success/50 shadow-sm flex items-center justify-center">
+                    <Circle className="h-4 w-4 text-success-foreground" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-sm">Parcial</p>
+                    <p className="text-xs text-muted-foreground">Manhã ou Tarde</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 p-3 rounded-lg bg-destructive/10 border border-destructive/20 transition-all hover:scale-105">
+                  <div className="w-6 h-6 rounded-full bg-destructive shadow-sm flex items-center justify-center">
+                    <AlertCircle className="h-4 w-4 text-destructive-foreground" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-sm">Pendente</p>
+                    <p className="text-xs text-muted-foreground">Não atualizado</p>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
 
-          <div className="grid gap-4">
-            {ubsList.map((ubs) => {
+          <div className="space-y-4">
+            {ubsList.map((ubs, index) => {
               const responsaveis = usersList.filter(u => u.ubsVinculadas.includes(ubs.id));
               
               return (
-                <Card key={ubs.id}>
-                  <CardHeader>
-                    <CardTitle className="text-lg">{ubs.nome}</CardTitle>
-                    <CardDescription>{ubs.localidade}</CardDescription>
+                <Card 
+                  key={ubs.id} 
+                  className="overflow-hidden border-l-4 border-l-primary shadow-card hover:shadow-elegant transition-all duration-300 animate-fade-in"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <CardHeader className="bg-gradient-to-r from-primary/5 to-transparent pb-3">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <CardTitle className="text-xl font-bold mb-1">{ubs.nome}</CardTitle>
+                        <CardDescription className="flex items-center gap-2 text-sm">
+                          <Building2 className="h-3 w-3" />
+                          {ubs.localidade}
+                        </CardDescription>
+                      </div>
+                      <Badge variant="outline" className="ml-2">
+                        {responsaveis.length} {responsaveis.length === 1 ? 'responsável' : 'responsáveis'}
+                      </Badge>
+                    </div>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="pt-4">
                     {responsaveis.length === 0 ? (
-                      <div className="text-sm text-muted-foreground py-4 text-center">
-                        <AlertCircle className="h-5 w-5 mx-auto mb-2" />
-                        Nenhum responsável vinculado
+                      <div className="text-center py-8 px-4 bg-muted/30 rounded-lg border border-dashed">
+                        <AlertCircle className="h-8 w-8 mx-auto mb-3 text-muted-foreground" />
+                        <p className="font-medium text-muted-foreground">Nenhum responsável vinculado</p>
+                        <p className="text-xs text-muted-foreground mt-1">Vincule um responsável na aba Vinculações</p>
                       </div>
                     ) : (
-                      <div className="space-y-2">
-                        {responsaveis.map((user) => {
+                      <div className="space-y-3">
+                        {responsaveis.map((user, userIndex) => {
                           const status = getUpdateStatus(ubs.id, user.id);
                           return (
                             <div
                               key={user.id}
-                              className={`flex items-center justify-between p-3 rounded-lg ${getStatusColor(status)}`}
+                              className={`group relative overflow-hidden rounded-xl p-4 transition-all duration-300 hover:scale-[1.02] ${getStatusColor(status)} animate-scale-in`}
+                              style={{ animationDelay: `${(index * 0.1) + (userIndex * 0.05)}s` }}
                             >
-                              <div className="flex items-center gap-3">
-                                {getStatusIcon(status)}
-                                <div>
-                                  <p className="font-medium">{user.nome}</p>
-                                  <p className="text-xs opacity-90">{user.login}</p>
+                              <div className="flex items-center justify-between relative z-10">
+                                <div className="flex items-center gap-4 flex-1 min-w-0">
+                                  <div className="flex-shrink-0">
+                                    {getStatusIcon(status)}
+                                  </div>
+                                  <div className="flex-1 min-w-0">
+                                    <p className="font-semibold text-base truncate">{user.nome}</p>
+                                    <p className="text-sm opacity-90 truncate">{user.login}</p>
+                                  </div>
                                 </div>
+                                <Badge 
+                                  variant="outline" 
+                                  className="bg-white/20 border-white/30 backdrop-blur-sm flex-shrink-0 ml-2"
+                                >
+                                  {getStatusText(status, ubs.id, user.id)}
+                                </Badge>
                               </div>
-                              <Badge variant="outline" className="bg-white/10 border-white/20">
-                                {getStatusText(status, ubs.id, user.id)}
-                              </Badge>
+                              <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                             </div>
                           );
                         })}
@@ -733,12 +790,14 @@ const AdminDashboard = () => {
           </div>
 
           {ubsList.length === 0 && (
-            <Card>
-              <CardContent className="flex flex-col items-center justify-center py-12">
-                <AlertCircle className="h-12 w-12 text-muted-foreground mb-4" />
-                <h3 className="text-lg font-semibold mb-2">Nenhuma UBS cadastrada</h3>
-                <p className="text-muted-foreground text-center">
-                  Cadastre UBS para começar a monitorar as atualizações.
+            <Card className="border-dashed animate-fade-in">
+              <CardContent className="flex flex-col items-center justify-center py-16">
+                <div className="rounded-full bg-muted p-6 mb-4">
+                  <AlertCircle className="h-12 w-12 text-muted-foreground" />
+                </div>
+                <h3 className="text-xl font-bold mb-2">Nenhuma UBS cadastrada</h3>
+                <p className="text-muted-foreground text-center max-w-sm">
+                  Cadastre UBS na aba correspondente para começar a monitorar as atualizações dos PDFs.
                 </p>
               </CardContent>
             </Card>
