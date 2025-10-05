@@ -52,6 +52,16 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     loadData();
+
+    // Verificar mudança de data à meia-noite
+    const checkDateChange = setInterval(() => {
+      const now = new Date();
+      if (now.getHours() === 0 && now.getMinutes() === 0) {
+        loadUpdateStatuses();
+      }
+    }, 60000); // Verifica a cada minuto
+
+    return () => clearInterval(checkDateChange);
   }, []);
 
   const loadData = async () => {
