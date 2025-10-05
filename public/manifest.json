@@ -1,5 +1,5 @@
 {
-  "name": "Consulta de Medicamentos ",
+  "name": "Consulta de Medicamentos",
   "short_name": "UBS Pereiro",
   "description": "Sistema de consulta de medicamentos disponíveis nas UBS de Pereiro",
   "start_url": "/",
@@ -11,13 +11,13 @@
   "lang": "pt-BR",
   "icons": [
     {
-      "src": "/ChatGPT Image 23_09_2025, 07_28_12.png",
+      "src": "/ChatGPT%20Image%2023_09_2025,%2007_28_12.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/ChatGPT Image 23_09_2025, 07_28_12.png",
+      "src": "/ChatGPT%20Image%2023_09_2025,%2007_28_12.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
