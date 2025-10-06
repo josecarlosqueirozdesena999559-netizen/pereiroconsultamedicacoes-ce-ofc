@@ -85,6 +85,9 @@ const AdminDashboard = () => {
 
   const loadUpdateStatuses = async () => {
     try {
+      // Limpar dados antigos primeiro
+      await supabase.rpc('cleanup_old_update_checks');
+      
       const today = new Date().toISOString().split('T')[0];
       const { data, error } = await supabase
         .from('update_checks')
