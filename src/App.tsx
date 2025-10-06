@@ -7,6 +7,11 @@ import Dashboard from "./pages/Dashboard";
 import MedicacoesAutoCusto from "./pages/MedicacoesAutoCusto";
 import NotFound from "./pages/NotFound";
 
+// Diagnóstico
+console.log('[App] React loaded:', React);
+console.log('[App] React version:', React.version);
+console.log('[App] useState available:', typeof React.useState);
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {

@@ -3,11 +3,13 @@ import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
 
-// Força reload quando o Service Worker for atualizado
+// Desregistrar Service Worker temporariamente para eliminar problemas de cache
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.addEventListener('controllerchange', () => {
-    console.log('[SW] New service worker activated, reloading page...');
-    window.location.reload();
+  navigator.serviceWorker.getRegistrations().then(registrations => {
+    registrations.forEach(registration => {
+      registration.unregister();
+      console.log('[SW] Service Worker unregistered for debugging');
+    });
   });
 }
 
