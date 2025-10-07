@@ -92,7 +92,7 @@ const Header = () => {
                   <Button
                     variant="ghost"
                     onClick={handleLogout}
-                    className="text-primary-foreground hover:bg-white/10 text-xs sm:text-sm px-2 sm:px-4 h-8 sm:h-10"
+                    className="bg-white text-primary hover:bg-white/90 text-xs sm:text-sm px-2 sm:px-4 h-8 sm:h-10"
                   >
                     <LogOut className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                     Sair
