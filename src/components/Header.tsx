@@ -84,7 +84,7 @@ const Header = () => {
                   <span className="text-xs opacity-90 text-center sm:text-left hidden sm:block">
                     Olá, <span className="font-semibold">{user?.nome}</span>
                     {user?.tipo === 'admin' && (
-                      <span className="ml-2 text-xs bg-white/20 px-2 py-1 rounded">
+                      <span className="ml-2 text-xs bg-white text-primary px-2 py-1 rounded">
                         Admin
                       </span>
                     )}
