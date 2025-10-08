@@ -12,6 +12,7 @@ import { Plus, Edit2, Trash2, Building2, Users, UserPlus, Link, Unlink, Calendar
 import { UBS, User } from '@/types';
 import { getUBS, addUBS, updateUBS, deleteUBS, getUsers, addUser, updateUser, deleteUser, setPostoResponsavel } from '@/lib/storage';
 import { supabase } from '@/integrations/supabase/client';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface UpdateStatus {
   ubs_id: string;
@@ -632,47 +633,49 @@ const AdminDashboard = () => {
         <TabsContent value="links" className="space-y-4">
           <h2 className="text-2xl font-semibold">Gerenciar Vinculações</h2>
           
-          <div className="grid gap-4">
-            {usersList.filter(user => user.tipo === 'responsavel').map((user) => (
-              <Card key={user.id}>
-                <CardHeader>
-                  <CardTitle className="flex items-center justify-between">
-                    <span>{user.nome}</span>
-                    <Badge variant="outline">
-                      {user.ubsVinculadas.length} UBS vinculada(s)
-                    </Badge>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-                    {ubsList.map((ubs) => {
-                      const isLinked = user.ubsVinculadas.includes(ubs.id);
-                      return (
-                        <Button
-                          key={ubs.id}
-                          variant={isLinked ? "default" : "outline"}
-                          size="sm"
-                          onClick={() => toggleUserUBS(user.id, ubs.id)}
-                          className={`justify-between transition-all duration-200 ${
-                            isLinked 
-                              ? "bg-green-600 hover:bg-green-700 text-white border-green-600" 
-                              : "border-gray-300 hover:border-green-400 hover:bg-green-50"
-                          }`}
-                        >
-                          <span>{ubs.nome}</span>
-                          {isLinked ? (
-                            <Unlink className="h-3 w-3" />
-                          ) : (
-                            <Link className="h-3 w-3" />
-                          )}
-                        </Button>
-                      );
-                    })}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          <ScrollArea className="h-[calc(100vh-16rem)]">
+            <div className="grid gap-4 pr-4">
+              {usersList.filter(user => user.tipo === 'responsavel').map((user) => (
+                <Card key={user.id}>
+                  <CardHeader className="pb-3">
+                    <CardTitle className="flex items-center justify-between text-lg">
+                      <span>{user.nome}</span>
+                      <Badge variant="outline">
+                        {user.ubsVinculadas.length} UBS vinculada(s)
+                      </Badge>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="pt-0">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+                      {ubsList.map((ubs) => {
+                        const isLinked = user.ubsVinculadas.includes(ubs.id);
+                        return (
+                          <Button
+                            key={ubs.id}
+                            variant={isLinked ? "default" : "outline"}
+                            size="sm"
+                            onClick={() => toggleUserUBS(user.id, ubs.id)}
+                            className={`justify-between transition-all duration-200 ${
+                              isLinked 
+                                ? "bg-green-600 hover:bg-green-700 text-white border-green-600" 
+                                : "border-gray-300 hover:border-green-400 hover:bg-green-50"
+                            }`}
+                          >
+                            <span className="truncate">{ubs.nome}</span>
+                            {isLinked ? (
+                              <Unlink className="h-3 w-3 ml-2 flex-shrink-0" />
+                            ) : (
+                              <Link className="h-3 w-3 ml-2 flex-shrink-0" />
+                            )}
+                          </Button>
+                        );
+                      })}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </ScrollArea>
         </TabsContent>
 
         <TabsContent value="updates" className="space-y-6 animate-fade-in">
