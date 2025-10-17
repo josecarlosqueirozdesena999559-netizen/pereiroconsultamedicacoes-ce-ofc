@@ -7,7 +7,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
-import { Upload, Download, Calendar, FileText, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Upload, Download, Calendar, FileText, AlertCircle, CheckCircle2, Info } from 'lucide-react';
 import { UBS } from '@/types';
 import { getUBS, savePDF, getPDF, getUpdateChecks, saveUpdateCheck } from '@/lib/storage';
 
@@ -172,6 +172,37 @@ const UserDashboard = () => {
           </p>
         </div>
       </div>
+
+      {/* Aviso informativo */}
+      <Card className="border-l-4 border-primary bg-primary/5">
+        <CardHeader className="flex flex-row items-center gap-2">
+          <Info className="h-5 w-5 text-primary" />
+          <div>
+            <CardTitle className="text-primary">Como Atualizar o PDF</CardTitle>
+            <CardDescription>Orientações formais para evitar erros</CardDescription>
+          </div>
+        </CardHeader>
+        <CardContent className="text-sm text-muted-foreground space-y-2">
+          <ol className="list-decimal list-inside space-y-1">
+            <li>
+              Clique no botão <strong>“Atualizar PDF”</strong> e selecione o PDF atualizado do seu estoque.
+            </li>
+            <li>
+              Ao atualizar, <strong>aguarde a notificação</strong> com a mensagem <em>“PDF atualizado com sucesso”</em>.
+            </li>
+            <li>
+              Utilize o botão <strong>“Baixar PDF Atual”</strong> para confirmar se o arquivo está correto, verificando a <strong>data do envio</strong>.
+            </li>
+            <li>
+              Marque <strong>“Atualizado pela manhã”</strong> ou <strong>“Atualizado pela tarde”</strong> <u>somente após atualizar</u>, para evitar erros ou desinformações sobre o estoque real.
+            </li>
+            <li>
+              Após seguir esses passos, o sistema estará devidamente atualizado e funcionando corretamente.
+            </li>
+          </ol>
+        </CardContent>
+      </Card>
+      {/* Fim do aviso */}
 
       {ubsList.length === 0 ? (
         <Card>
